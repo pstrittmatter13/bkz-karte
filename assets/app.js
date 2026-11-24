@@ -60,7 +60,19 @@
 
   svg.call(d3.zoom().scaleExtent([1, 40]).on("zoom", ev => g.attr("transform", ev.transform)));
 
-  function faerben() { gem.attr("fill", f => farbe(f.properties.ags)); legende(); regionen(); }
+  function faerben() { gem.attr("fill", f => farbe(f.properties.ags)); legende(); regionen(); kennzahlen(); }
+
+  function kennzahlen() {
+    const D = K.datensatz, A = K.abdeckung[ebene];
+    const kz = (wert, text) => `<div class="kz"><b>${wert}</b><span>${text}</span></div>`;
+    document.getElementById("kennzahlen").innerHTML =
+      kz(D.vnb_mit_wert, `Netzbetreiber mit Wert (${D.werte_in_auswertung} Werte)`) +
+      kz(fmt(D.eog_anteil_prozent, 1) + " %", `Anteil dieser VNB an den Erlösobergrenzen 2026 aller ${D.vnb_gesamt_eog_liste} VNB`) +
+      kz(pct(A.ew_mit_wert_anteil), `der Einwohner mit ${ebene}-Wert (${A.gem_mit_wert.toLocaleString("de-DE")} Gemeinden)`) +
+      kz(A.vnb_mit_wert, `Netzbetreiber mit ${ebene}-Wert`);
+    document.getElementById("g-vnb").textContent = D.vnb_mit_wert;
+    document.getElementById("g-eog").textContent = fmt(D.eog_anteil_prozent, 1);
+  }
 
   function legende() {
     const t = [`<span class="k"><i style="background:${FARBEN[0]}"></i>&lt; ${GRENZEN[0]}</span>`];

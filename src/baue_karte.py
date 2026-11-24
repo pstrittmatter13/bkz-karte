@@ -171,10 +171,29 @@ for nr in sorted(genutzt):
                    "kenn": v["kenn"] if v else {},
                    "docs": [x["id"] for x in v["docs"]] if v else []}
 
+# Abdeckung: Erlösobergrenzen (aus dem Datensatz) und je Ebene Gemeinden/Einwohner mit Wert
+eog_zeilen = lies(os.path.join(DS, "groesse_eog_2026.csv"))
+eog = {r["Unternehmen"]: float(r["eog_anteil_%"]) for r in eog_zeilen}
+eog_zu = lies(os.path.join(DS, "eog_zuordnung.csv"))
+eog_anteil = round(sum(eog.get(r["eog_unternehmen"], 0) for r in eog_zu), 1)
+ew = {f["properties"]["ags"]: f["properties"]["ew"] for f in gemeinden["features"]}
+ew_ges = sum(ew.values())
+abdeckung = {}
+for e in ["HS", "HS/MS", "MS", "MS/NS"]:
+    g = GRUPPE[e]
+    mit = [a for a, z in gem.items() if g in z and z[g][0] in vnb and e in vnb[z[g][0]]["kenn"]]
+    zug = [a for a, z in gem.items() if g in z]
+    abdeckung[e] = {"gem_mit_wert": len(mit), "gem_zugeordnet": len(zug), "gem_gesamt": len(gem),
+                    "ew_mit_wert_anteil": round(sum(ew[a] for a in mit) / ew_ges, 3),
+                    "vnb_mit_wert": sum(1 for v in vnb.values() if e in v["kenn"])}
+
 out = {
     "erzeugt": date.today().isoformat(),
     "datensatz": {"ordner": os.path.basename(DS.rstrip("/\\")), "stichtag": "2026-11-24",
-                  "werte_in_auswertung": sum(1 for w in werte if w["in_auswertung"] == "ja")},
+                  "werte_in_auswertung": sum(1 for w in werte if w["in_auswertung"] == "ja"),
+                  "vnb_mit_wert": sum(1 for v in vnb.values() if v["kenn"]),
+                  "eog_anteil_prozent": eog_anteil, "vnb_gesamt_eog_liste": len(eog_zeilen)},
+    "abdeckung": abdeckung,
     "mastr": mstand,
     "regel_stat": stat,
     "ebenen": EBENEN, "gruppe": GRUPPE,

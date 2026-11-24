@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BKZ-Karte Deutschland</title>
 <meta name="description" content="Baukostenzuschüsse (BKZ) der Stromverteilnetzbetreiber oberhalb der Niederspannung, Deutschland 2026 – je Wert mit Preisblatt belegt.">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=1.1">
 </head>
 <body>
 <header class="kopf">
   <h1>Baukostenzuschüsse oberhalb der Niederspannung</h1>
   <p class="unter">Deutschland · Stichtag <span id="stichtag">24.11.2026</span> · jeder Wert aus dem veröffentlichten Preisblatt des Netzbetreibers, mit Fundstelle und Prüfsumme</p>
+  <div id="kennzahlen" class="kennzahlen" aria-label="Kennzahlen"></div>
 </header>
 
 <main>
@@ -64,6 +65,15 @@
   </section>
 
   <section class="methode">
+    <h2>Abdeckung und Grenzen</h2>
+    <ul class="grenzen">
+      <li><strong>Erhoben sind die größeren Netzbetreiber, keine Zufallsstichprobe.</strong> Durchsucht wurden die VNB nach absteigender Erlösobergrenze bis 90 % der Summe aller VNB; die <span id="g-vnb">124</span> VNB mit Wert stehen für <span id="g-eog">75,8</span> % der Erlösobergrenzen 2026. Kleine VNB veröffentlichen selten einen Wert oberhalb der Niederspannung.</li>
+      <li><strong>Grau heißt nicht „kein BKZ“.</strong> Dunkelgrau: gesucht, aber kein Wert veröffentlicht (oft nur Rechenregel oder „auf Anfrage“). Hellgrau: noch nicht erhoben oder Netzbetreiber nicht eindeutig.</li>
+      <li><strong>Netzgebiete sind eine Näherung</strong> aus dem Marktstammdatenregister (siehe unten); Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden. Beim HS-Netz wird nur zugeordnet, wenn ein Betreiber klar überwiegt.</li>
+      <li><strong>Werte wie veröffentlicht:</strong> netto, am Stichtag gültig, mit pauschalen Abschlägen des Netzbetreibers; ohne Speicher- und Flexibilitätsrabatte. €/kVA ohne Angabe im Blatt mit cos φ = 1 umgerechnet.</li>
+      <li><strong>Mediane</strong> zählen jeden Netzbetreiber einmal, unabhängig von Größe oder Fläche.</li>
+      <li><strong>Prüfung:</strong> jeder Wert am Original nachgelesen; Stichprobe des Autors und zwei unabhängige Prüfungen durch KI-Modelle, bisher keine Prüfung durch eine weitere Person (Einzelheiten im Datensatz-README, Abschnitt 3.5).</li>
+    </ul>
     <h2>Woher die Zuordnung kommt</h2>
     <p>Grenzen von Netzgebieten werden in Deutschland nicht amtlich veröffentlicht. Die Karte leitet den zuständigen Netzbetreiber je Gemeinde aus dem <strong>Marktstammdatenregister</strong> der Bundesnetzagentur ab: Gezählt wird, an welchen Netzbetreiber die Anlagen in Betrieb in einer Gemeinde auf der jeweiligen Spannungsebene angeschlossen sind; zuständig ist der Netzbetreiber mit den meisten Anschlüssen. Das ist eine Näherung – Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden, der Anteil steht im Panel. Einzelheiten: <a href="METHODIK.md">METHODIK.md</a>.</p>
     <p id="quellenzeile" class="klein"></p>
@@ -81,6 +91,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v=1.1"></script>
 </body>
 </html>
