@@ -1,0 +1,197 @@
+"""Kartendaten aus dem BKZ-Datensatz und der MaStR-Zählung erzeugen.
+
+Aufruf:  python src/baue_karte.py [Ordner des Datensatzes]
+         Standard: ../OneDrive/.../01_Literatur/BKZ/Veroeffentlichung (Veröffentlichungsfassung)
+Eingaben: <Datensatz>/bkz_werte_lang.csv, bkz_quellen.csv, grundgesamtheit_mastr.csv, download_log.csv, README.md
+          data/mastr_zaehlung.csv, data/mastr_netzbetreiber.csv, data/mastr_stand.json (aus netzbetreiber_gemeinde.py)
+          zuordnung_hand.csv (Ausnahmen beim Abgleich Datensatz -> MaStR-Nummer, mit Begründung)
+Ausgabe:  data/karte.json (alles, was die Seite braucht), datensatz/ (Kopie der Datensatzdateien für das Paket)
+
+Zuordnungsregel Gemeinde -> zuständiger Netzbetreiber (Festlegung dieses Pakets, Näherung):
+  MS-Netz (Ebenen MS und MS/NS): Netzbetreiber mit den meisten Einheiten in Betrieb, deren Netzanschlusspunkt
+      in der Gemeinde auf MS oder MS/NS liegt. Ohne solchen Anschluss: dieselbe Regel mit NS-Anschlüssen
+      (der NS-Betreiber betreibt in aller Regel auch das MS-Netz vor Ort; als „abgeleitet aus NS“ gekennzeichnet).
+  HS-Netz (Ebenen HS, HS/MS, HöS/HS): Mehrheit der Anschlüsse auf HS oder HS/MS in der Gemeinde;
+      ohne solchen Anschluss Mehrheit im Kreis, aber nur bei mindestens KREIS_MIN_N Anschlüssen und
+      mindestens KREIS_MIN_ANTEIL für einen Netzbetreiber; sonst keine Zuordnung („nicht eindeutig“).
+  Gemeindeschlüssel im MaStR mit 5 Stellen (kreisfreie Städte) werden um „000“ ergänzt.
+  Gleichstand: kleinere MaStR-Nummer (nur damit das Ergebnis reproduzierbar ist; Anteil wird angezeigt).
+"""
+import collections
+import csv
+import json
+import os
+import shutil
+import sys
+from datetime import date
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STD = os.path.join(os.path.expanduser("~"), "OneDrive", "Dokumente O", "1_Uni", "01_Bachelorarbeit",
+                   "01_Literatur", "BKZ", "Veroeffentlichung")
+DS = sys.argv[1] if len(sys.argv) > 1 else STD
+KREIS_MIN_N, KREIS_MIN_ANTEIL = 10, 0.6
+EBENEN = ["HöS/HS", "HS", "HS/MS", "MS", "MS/NS", "NS"]
+GRUPPE = {"HöS/HS": "hs", "HS": "hs", "HS/MS": "hs", "MS": "ms", "MS/NS": "ms", "NS": "ms"}
+KOPIE = ["bkz_werte_lang.csv", "bkz_quellen.csv", "grundgesamtheit_mastr.csv", "download_log.csv",
+         "eog_zuordnung.csv", "groesse_eog_2026.csv", "uenb_regionalfaktoren.csv", "README.md", "SHA256SUMS.txt"]
+
+
+def lies(pfad):
+    with open(pfad, encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f, delimiter=";"))
+
+
+def zahl(x):
+    try:
+        return float(str(x).replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+
+
+# ---------- Datensatz ----------
+werte = lies(os.path.join(DS, "bkz_werte_lang.csv"))
+quellen = lies(os.path.join(DS, "bkz_quellen.csv"))
+gg = lies(os.path.join(DS, "grundgesamtheit_mastr.csv"))
+sha = {r["id"]: r["sha256"] for r in lies(os.path.join(DS, "download_log.csv"))}
+hand = {r["id"]: r for r in lies(os.path.join(ROOT, "zuordnung_hand.csv"))}
+name2nr = {}
+for r in gg:
+    name2nr.setdefault(r["netzbetreiber"], r["mastr_nr"])
+
+ohne_nr = []
+dok = {}       # id -> Dokument
+for q in quellen:
+    nr = hand[q["id"]]["mastr_nr"] if q["id"] in hand else name2nr.get(q.get("mastr_name") or "")
+    dok[q["id"]] = {
+        "id": q["id"], "nr": nr, "vnb": q["netzbetreiber"], "jahr": q["jahr"], "typ": q["typ"], "region": q["region"],
+        "land": q["bundesland"], "titel": q["dokument"], "url": q["doc_url"], "pdf": q["pdf_datei"],
+        "sha256": sha.get(q["id"], ""), "gueltig_ab": q["gueltig_ab"], "gueltig_bis": q["gueltig_bis"],
+        "stand": q["stand"], "einheit": q["einheit"], "kategorie": q["veroeffentlichung"],
+        "gilt_stichtag": q["gilt_stichtag"], "methode": q["methode_kat"], "methode_beleg": q["methode_beleg"],
+        "faktor": zahl(q["faktor_num"]), "speicher": q["speicher_sonderregel"], "speicher_faktor": zahl(q["speicher_faktor"]),
+        "fundort": q["fundort"], "suche": q["suche_2_beleg"], "werte": []}
+for w in werte:
+    d = dok.get(w["id"])
+    if d is None:
+        continue
+    d["werte"].append({"ebene": w["netzebene"], "orig": w["netzebene_original"], "netto": zahl(w["bkz_netto"]),
+                       "einheit": w["einheit"], "eur_kw": zahl(w["wert_eur_kw"]), "umrechnung": w["umrechnung_kva_kw"],
+                       "aus": w["in_auswertung"] == "ja", "grund": w["ausschlussgrund"], "gilt_stichtag": w["gilt_stichtag"]})
+
+vnb = collections.defaultdict(lambda: {"docs": []})
+for d in dok.values():
+    if d["nr"]:
+        vnb[d["nr"]]["docs"].append(d)
+    elif d["werte"] and any(x["aus"] for x in d["werte"]):
+        ohne_nr.append(d["id"])
+# Kennwert je VNB und Ebene: Wert in der Auswertung (am Stichtag gültig, Regeln des Datensatzes)
+for nr, v in vnb.items():
+    k = {}
+    for d in v["docs"]:
+        for x in d["werte"]:
+            if x["aus"] and x["eur_kw"] is not None:
+                k.setdefault(x["ebene"], (x["eur_kw"], d["id"]))
+    v["kenn"] = {e: {"w": w_, "id": i} for e, (w_, i) in k.items()}
+    v["status"] = ("Wert" if k else
+                   next((d["kategorie"] for d in v["docs"] if d["kategorie"]), "keine Angabe"))
+
+# ---------- MaStR ----------
+zaehl = collections.defaultdict(collections.Counter)   # (ags, gruppe-ebene) -> Counter(nr)
+_ags_vg = None  # wird nach dem Laden der Gemeinden gesetzt
+_roh = lies(os.path.join(ROOT, "data", "mastr_zaehlung.csv"))
+mnamen = {r["mastr_nr"]: {"name": r["name"], "ort": r["ort"]} for r in lies(os.path.join(ROOT, "data", "mastr_netzbetreiber.csv"))}
+mstand = json.load(open(os.path.join(ROOT, "data", "mastr_stand.json"), encoding="utf-8"))
+gemeinden = json.load(open(os.path.join(ROOT, "data", "gemeinden.geojson"), encoding="utf-8"))
+ags_liste = [f["properties"]["ags"] for f in gemeinden["features"]]
+_ags_vg = set(ags_liste)
+for r in _roh:
+    a = r["ags"]
+    if len(a) == 5 and a + "000" in _ags_vg:
+        a += "000"
+    zaehl[(a, r["ebene"])][r["mastr_nr"]] += int(r["anzahl"])
+
+
+
+
+def sieger(c):
+    if not c:
+        return None
+    n = sum(c.values())
+    nr, k = sorted(c.items(), key=lambda t: (-t[1], t[0]))[0]
+    return nr, round(k / n, 3), n, [[a, b] for a, b in sorted(c.items(), key=lambda t: (-t[1], t[0]))[:4]]
+
+
+# Vorab je Gemeinde zählen (Präfixsummen für Kreis/Land nur bei Bedarf)
+per_ags = collections.defaultdict(lambda: collections.defaultdict(collections.Counter))
+for (a, e), cc in zaehl.items():
+    per_ags[a][e].update(cc)
+kreis = collections.defaultdict(collections.Counter)
+for a, d in per_ags.items():
+    for e in ("HS", "HS/MS"):
+        kreis[a[:5]].update(d[e])
+
+gem = {}
+stat = collections.Counter()
+for a in ags_liste:
+    d = per_ags.get(a, {})
+    ms = sieger(d.get("MS", collections.Counter()) + d.get("MS/NS", collections.Counter()))
+    ms_basis = "MS"
+    if ms is None:
+        ms, ms_basis = sieger(d.get("NS", collections.Counter())), "NS"
+    hs = sieger(d.get("HS", collections.Counter()) + d.get("HS/MS", collections.Counter()))
+    hs_basis = "Gemeinde"
+    if hs is None:
+        k = sieger(kreis.get(a[:5], collections.Counter()))
+        if k and k[2] >= KREIS_MIN_N and k[1] >= KREIS_MIN_ANTEIL:
+            hs, hs_basis = k, "Kreis"
+        elif k:
+            stat["hs_kreis_zu_unsicher"] += 1
+    e = {}
+    if ms:
+        e["ms"] = [ms[0], ms[1], ms[2], ms_basis, ms[3]]
+        stat["ms_" + ms_basis] += 1
+    else:
+        stat["ms_keiner"] += 1
+    if hs:
+        e["hs"] = [hs[0], hs[1], hs[2], hs_basis, hs[3]]
+        stat["hs_" + hs_basis] += 1
+    else:
+        stat["hs_keiner"] += 1
+    gem[a] = e
+
+# Nur Netzbetreiber, die in der Karte oder im Datensatz vorkommen
+genutzt = {x for e in gem.values() for k in ("ms", "hs") if k in e for x in [e[k][0]] + [y[0] for y in e[k][4]]}
+genutzt |= set(vnb)
+aus_vnb = {}
+for nr in sorted(genutzt):
+    v = vnb.get(nr)
+    aus_vnb[nr] = {"name": mnamen.get(nr, {}).get("name") or (v["docs"][0]["vnb"] if v else nr),
+                   "ort": mnamen.get(nr, {}).get("ort", ""),
+                   "status": v["status"] if v else "nicht im Datensatz",
+                   "kenn": v["kenn"] if v else {},
+                   "docs": [x["id"] for x in v["docs"]] if v else []}
+
+out = {
+    "erzeugt": date.today().isoformat(),
+    "datensatz": {"ordner": os.path.basename(DS.rstrip("/\\")), "stichtag": "2026-11-24",
+                  "werte_in_auswertung": sum(1 for w in werte if w["in_auswertung"] == "ja")},
+    "mastr": mstand,
+    "regel_stat": stat,
+    "ebenen": EBENEN, "gruppe": GRUPPE,
+    "vnb": aus_vnb,
+    "docs": {i: d for i, d in dok.items() if d["nr"] or d["werte"]},
+    "gem": gem,
+}
+with open(os.path.join(ROOT, "data", "karte.json"), "w", encoding="utf-8") as f:
+    json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
+
+os.makedirs(os.path.join(ROOT, "datensatz"), exist_ok=True)
+for n in KOPIE:
+    if os.path.exists(os.path.join(DS, n)):
+        shutil.copy2(os.path.join(DS, n), os.path.join(ROOT, "datensatz", n))
+
+print("Gemeinden:", len(gem), dict(stat))
+print("VNB im Datensatz mit MaStR-Nr.:", len(vnb), "· mit Wert:", sum(1 for v in vnb.values() if v["kenn"]))
+if ohne_nr:
+    print("WARNUNG – Dokumente mit Wert, aber ohne MaStR-Nr. (in zuordnung_hand.csv eintragen):", ohne_nr)
+print("karte.json", f"{os.path.getsize(os.path.join(ROOT, 'data', 'karte.json')) / 1e6:.1f} MB")

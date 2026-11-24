@@ -1,0 +1,52 @@
+:root {
+  --bg: #fcfcfb; --fl: #ffffff; --ink: #1d1d1b; --ink2: #55544f; --ink3: #8a8983;
+  --linie: #e2e1dc; --gem-linie: rgba(255,255,255,.55); --land-linie: #3d3c38;
+  --kein-wert: #cfcec9; --nicht-erhoben: #eeede9; --akzent: #1c5cab;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1a1a19; --fl: #232321; --ink: #ecebe6; --ink2: #b4b3ad; --ink3: #85847e;
+    --linie: #3a3a37; --gem-linie: rgba(26,26,25,.5); --land-linie: #d8d7d1;
+    --kein-wert: #55554f; --nicht-erhoben: #33332f; --akzent: #86b6ef; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--akzent); }
+.kopf, main, .fuss { max-width: 1400px; margin: 0 auto; padding: 0 16px; }
+.kopf h1 { font-size: 1.45rem; margin: 20px 0 2px; }
+.unter { color: var(--ink2); margin: 0 0 12px; }
+h2 { font-size: 1.1rem; margin: 0 0 8px; }
+.steuerung { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; padding: 10px 0; border-bottom: 1px solid var(--linie); }
+.steuerung label { display: flex; flex-direction: column; font-size: .8rem; color: var(--ink2); gap: 3px; }
+select, input[type=search] { font: inherit; padding: 5px 8px; border: 1px solid var(--linie); border-radius: 6px; background: var(--fl); color: var(--ink); min-width: 210px; }
+.legende { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .78rem; color: var(--ink2); align-items: center; }
+.legende .k { display: inline-flex; align-items: center; gap: 5px; }
+.legende i { width: 18px; height: 12px; border-radius: 2px; display: inline-block; }
+.raster { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 16px; margin-top: 12px; }
+@media (max-width: 960px) { .raster { grid-template-columns: 1fr; } }
+.karte-box { position: relative; background: var(--fl); border: 1px solid var(--linie); border-radius: 8px; padding: 6px; }
+#karte { width: 100%; height: auto; aspect-ratio: 0.78; display: block; cursor: pointer; }
+#karte path.g { stroke: var(--gem-linie); stroke-width: .25; vector-effect: non-scaling-stroke; }
+#karte path.g:hover { stroke: var(--ink); stroke-width: 1.2; }
+#karte path.sel { stroke: var(--ink); stroke-width: 2; }
+#karte path.land { fill: none; stroke: var(--land-linie); stroke-width: .9; vector-effect: non-scaling-stroke; pointer-events: none; }
+.tooltip { position: absolute; pointer-events: none; background: var(--fl); border: 1px solid var(--linie); border-radius: 6px; padding: 6px 9px; font-size: .8rem; box-shadow: 0 2px 8px rgba(0,0,0,.12); max-width: 300px; }
+.tooltip b { display: block; }
+.hinweis, .klein { font-size: .78rem; color: var(--ink3); margin: 6px 4px 0; }
+.panel { background: var(--fl); border: 1px solid var(--linie); border-radius: 8px; padding: 14px 16px; max-height: 92vh; overflow: auto; }
+.panel h3 { font-size: .95rem; margin: 16px 0 4px; padding-top: 10px; border-top: 1px solid var(--linie); }
+.panel .meta { color: var(--ink2); font-size: .82rem; }
+.panel table, #tabelle { border-collapse: collapse; width: 100%; font-size: .84rem; }
+.panel td, .panel th { padding: 3px 6px 3px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--linie); }
+.panel td.z, #tabelle td.z, #tabelle th.z { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip { display: inline-block; font-size: .72rem; padding: 0 6px; border-radius: 10px; border: 1px solid var(--linie); color: var(--ink2); }
+.belege { font-size: .8rem; color: var(--ink2); }
+.belege code { font-size: .74rem; word-break: break-all; }
+details summary { cursor: pointer; color: var(--ink2); font-size: .82rem; }
+.tabelle-box, .methode { margin-top: 24px; }
+.tab-steuer { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; font-size: .85rem; color: var(--ink2); }
+.tab-scroll { overflow-x: auto; border: 1px solid var(--linie); border-radius: 8px; background: var(--fl); }
+#tabelle th { position: sticky; top: 0; background: var(--fl); text-align: left; padding: 6px 8px; cursor: pointer; border-bottom: 1px solid var(--linie); white-space: nowrap; }
+#tabelle td { padding: 4px 8px; border-bottom: 1px solid var(--linie); }
+#tabelle tbody tr:hover { background: rgba(127,127,127,.08); }
+.regtab td.z { text-align: right; }
+.fuss { font-size: .78rem; color: var(--ink3); padding: 24px 16px 40px; }
