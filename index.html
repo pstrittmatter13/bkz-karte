@@ -8,13 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1.3">
+<link rel="stylesheet" href="assets/style.css?v=1.6">
 </head>
 <body>
 <header class="kopf">
   <p class="eyebrow">Offener Datensatz · Deutschland · Stichtag <span id="stichtag">24.11.2026</span></p>
   <h1>Baukostenzuschüsse für Netzanschlüsse</h1>
-  <p class="unter">Oberhalb der Niederspannung, je Gemeinde und Netzebene. Jeder Wert stammt aus dem veröffentlichten Preisblatt des Netzbetreibers – mit Fundstelle und Prüfsumme.</p>
+  <p class="unter">Oberhalb der Niederspannung, je Gemeinde und Netzebene.<br>
+    Jeder Wert stammt aus dem veröffentlichten Preisblatt des Netzbetreibers – mit Fundstelle und Prüfsumme.</p>
   <div id="kennzahlen" class="kennzahlen" aria-label="Kennzahlen"></div>
 </header>
 
@@ -33,9 +34,9 @@
       <label class="feld-titel" for="suche-gem">Gemeinde suchen</label>
       <div class="suche">
         <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <input id="suche-gem" type="search" placeholder="z. B. Konstanz" list="gem-liste" autocomplete="off">
+        <input id="suche-gem" type="text" placeholder="z. B. Konstanz" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="vorschlaege" aria-autocomplete="list">
+        <ul id="vorschlaege" class="vorschlaege" role="listbox" hidden></ul>
       </div>
-      <datalist id="gem-liste"></datalist>
     </div>
     <div class="feld feld-legende">
       <span class="feld-titel">BKZ in €/kW netto</span>
@@ -46,22 +47,25 @@
   <div class="raster">
     <section class="karte-box">
       <svg id="karte" role="img" aria-label="Karte der Gemeinden, eingefärbt nach Baukostenzuschuss"></svg>
+      <button type="button" id="zuruecksetzen" class="knopf-karte" hidden>Ganz Deutschland</button>
       <div id="tooltip" class="tooltip" hidden></div>
       <p class="hinweis">Mausrad oder Ziehen: zoomen und verschieben · Klick auf eine Gemeinde: Netzbetreiber, Werte und Beleg</p>
     </section>
     <aside id="panel" class="panel" aria-live="polite">
       <h2>Gemeinde wählen</h2>
-      <p class="meta">Klicke auf die Karte oder suche eine Gemeinde. Angezeigt werden der zuständige Netzbetreiber für das MS- und das HS-Netz, seine BKZ je Ebene, wie er rechnet und wo der Wert im Preisblatt steht.</p>
+      <p class="meta">Klicke auf die Karte oder suche eine Gemeinde. Angezeigt werden die zuständigen Netzbetreiber, ihre BKZ je Ebene, wie sie rechnen und wo der Wert im Preisblatt steht.</p>
       <div id="regionen"></div>
     </aside>
   </div>
 
-  <section class="tabelle-box">
-    <h2>Alle Netzbetreiber mit Wert</h2>
-    <div class="tab-steuer">
-      <input id="suche-vnb" type="search" placeholder="Netzbetreiber filtern" autocomplete="off">
-      <span id="tab-anzahl"></span>
-      <a id="csv-link" href="datensatz/bkz_werte_lang.csv">Werte als CSV</a>
+  <section class="kasten">
+    <div class="kasten-kopf">
+      <h2>Alle Netzbetreiber mit Wert</h2>
+      <div class="tab-steuer">
+        <input id="suche-vnb" type="search" placeholder="Netzbetreiber oder Land filtern" autocomplete="off">
+        <span id="tab-anzahl"></span>
+        <a class="knopf" href="datensatz/bkz_werte_lang.csv" download>Werte als CSV</a>
+      </div>
     </div>
     <div class="tab-scroll">
       <table id="tabelle">
@@ -73,36 +77,57 @@
         <tbody></tbody>
       </table>
     </div>
-    <p class="hinweis">Werte in €/kW netto; €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. Nur Werte, die am Stichtag gelten und nach den Regeln des Datensatzes in die Auswertung gehen.</p>
+    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. „Original“ führt zur Adresse beim Netzbetreiber (Stand 24.11.2026), „Archiv“ zu gespeicherten Kopien in der Wayback Machine.</p>
   </section>
 
-  <section class="methode">
+  <section class="kasten">
     <h2>Abdeckung und Grenzen</h2>
-    <ul class="grenzen">
-      <li><strong>Erhoben sind die größeren Netzbetreiber, keine Zufallsstichprobe.</strong> Durchsucht wurden die VNB nach absteigender Erlösobergrenze bis 90 % der Summe aller VNB; die <span id="g-vnb">124</span> VNB mit Wert stehen für <span id="g-eog">75,8</span> % der Erlösobergrenzen 2026. Kleine VNB veröffentlichen selten einen Wert oberhalb der Niederspannung.</li>
-      <li><strong>Grau heißt nicht „kein BKZ“.</strong> Dunkelgrau: gesucht, aber kein Wert veröffentlicht (oft nur Rechenregel oder „auf Anfrage“). Hellgrau: noch nicht erhoben oder Netzbetreiber nicht eindeutig.</li>
-      <li><strong>Netzgebiete sind eine Näherung</strong> aus dem Marktstammdatenregister (siehe unten); Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden. Beim HS-Netz wird nur zugeordnet, wenn ein Betreiber klar überwiegt.</li>
-      <li><strong>Werte wie veröffentlicht:</strong> netto, am Stichtag gültig, mit pauschalen Abschlägen des Netzbetreibers; ohne Speicher- und Flexibilitätsrabatte. €/kVA ohne Angabe im Blatt mit cos φ = 1 umgerechnet.</li>
-      <li><strong>Mediane</strong> zählen jeden Netzbetreiber einmal, unabhängig von Größe oder Fläche.</li>
-      <li><strong>Prüfung:</strong> jeder Wert am Original nachgelesen; Stichprobe des Autors und zwei unabhängige Prüfungen durch KI-Modelle, bisher keine Prüfung durch eine weitere Person (Einzelheiten im Datensatz-README, Abschnitt 3.5).</li>
-    </ul>
-    <h2>Woher die Zuordnung kommt</h2>
-    <p>Grenzen von Netzgebieten werden in Deutschland nicht amtlich veröffentlicht. Die Karte leitet den zuständigen Netzbetreiber je Gemeinde aus dem <strong>Marktstammdatenregister</strong> der Bundesnetzagentur ab: Gezählt wird, an welchen Netzbetreiber die Anlagen in Betrieb in einer Gemeinde auf der jeweiligen Spannungsebene angeschlossen sind; zuständig ist der Netzbetreiber mit den meisten Anschlüssen. Das ist eine Näherung – Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden, der Anteil steht im Panel. Einzelheiten: <a href="METHODIK.md">METHODIK.md</a>.</p>
+    <p class="meta">Was die Karte zeigt – und was nicht.</p>
+    <div class="kacheln">
+      <div class="kachel"><h3>Größere Netzbetreiber</h3><p>Erhoben nach Größe, keine Zufallsstichprobe. Die <b id="g-vnb">124</b> VNB mit Wert stehen für <b><span id="g-eog">75,8</span> %</b> der Erlösobergrenzen 2026. Kleine VNB veröffentlichen selten einen Wert.</p></div>
+      <div class="kachel"><h3>Grau ≠ kein BKZ</h3><p><b>Dunkelgrau:</b> gesucht, kein Wert veröffentlicht (Rechenregel, „auf Anfrage“). <b>Hellgrau:</b> nicht erhoben oder Netzbetreiber nicht eindeutig.</p></div>
+      <div class="kachel"><h3>Netzgebiete genähert</h3><p>Aus dem Marktstammdatenregister: zuständig ist, wer die meisten Anlagen der Gemeinde anschließt. HS-Netz nur bei klarer Mehrheit.</p></div>
+      <div class="kachel"><h3>Werte wie veröffentlicht</h3><p>Netto, am Stichtag gültig, mit pauschalen Abschlägen. <b>Ohne</b> Speicher- und Flexrabatte.</p></div>
+      <div class="kachel"><h3>Mediane je VNB</h3><p>Jeder Netzbetreiber zählt einmal – unabhängig von Größe, Fläche oder Anschlüssen.</p></div>
+      <div class="kachel"><h3>Geprüft</h3><p>Jeder Wert am Original nachgelesen; Stichprobe und zwei KI-Prüfungen, 0 Wertfehler. Prüfung durch eine weitere Person steht aus.</p></div>
+    </div>
+    <p class="meta mehr">Ausführlich: <a href="https://github.com/pstrittmatter13/bkz-karte/blob/main/METHODIK.md">Methodik der Karte</a> · <a href="https://github.com/pstrittmatter13/bkz-karte/blob/main/datensatz/README.md">Datensatz: Regeln, Prüfung, Grenzen</a></p>
     <p id="quellenzeile" class="klein"></p>
+  </section>
+
+  <section class="kasten">
+    <h2>Zitieren, Lizenz, Quellen</h2>
+    <div class="spalten">
+      <div>
+        <h3>Zitieren</h3>
+        <p class="zitat" id="zitat">Schneider-Strittmatter, P. (2026): BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026 (Version 1.0.0). https://github.com/pstrittmatter13/bkz-karte</p>
+        <button type="button" class="knopf" id="zitat-kopieren">Zitat kopieren</button>
+        <a class="knopf knopf-leise" href="https://github.com/pstrittmatter13/bkz-karte/blob/main/CITATION.cff">BibTeX / CFF</a>
+      </div>
+      <div>
+        <h3>Lizenz</h3>
+        <p>Daten und Karte © 2026 Paul Schneider-Strittmatter (HTWG Konstanz), <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>. Code: MIT. <a href="https://github.com/pstrittmatter13/bkz-karte/blob/main/LICENSE">Lizenztext</a></p>
+        <h3>Repositorium</h3>
+        <p><a href="https://github.com/pstrittmatter13/bkz-karte">github.com/pstrittmatter13/bkz-karte</a> – Daten, Skripte, Methodik</p>
+      </div>
+      <div>
+        <h3>Quellen</h3>
+        <ul class="quellen">
+          <li><b>BKZ-Werte:</b> Preisblätter der Netzbetreiber, je Wert verlinkt. Maßgeblich sind die Preisblätter; keine Gewähr für Vollständigkeit.</li>
+          <li><b>Netzbetreiber je Gemeinde:</b> Bundesnetzagentur, <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Marktstammdatenregister</a>, Export 24.11.2026, <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>; Daten verändert (gezählt, abgeleitet).</li>
+          <li><b>Grenzen:</b> © <a href="https://www.bkg.bund.de">BKG</a> (2026) <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>, Datenquellen: <a href="https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_vg_nuts.pdf">sgx.geodatenzentrum.de</a>; Daten verändert (vereinfacht).</li>
+          <li><b>Karte:</b> d3.js (ISC).</li>
+        </ul>
+      </div>
+    </div>
   </section>
 </main>
 
 <footer class="fuss">
-  <p><strong>Zitieren:</strong> Schneider-Strittmatter, P. (2026): BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026 (Version 1.0.0). <a href="https://github.com/pstrittmatter13/bkz-karte">github.com/pstrittmatter13/bkz-karte</a> · Daten, Methodik, Code und Zitierangaben (CITATION.cff) im Repositorium.</p>
-  <p><strong>Lizenz:</strong> Daten und Karte © 2026 Paul Schneider-Strittmatter (HTWG Konstanz), <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>; Code MIT.</p>
-  <p><strong>Quellen:</strong> BKZ-Werte aus den Preisblättern der Netzbetreiber (je Wert verlinkt; maßgeblich sind die Preisblätter, keine Gewähr für Vollständigkeit) ·
-    Netzbetreiber-Zuordnung: Bundesnetzagentur, <a href="https://www.marktstammdatenregister.de/MaStR/Datendownload">Marktstammdatenregister</a>, Gesamtdatenexport vom 24.11.2026, <a href="https://www.govdata.de/dl-de/by-2-0">Datenlizenz Deutschland – Namensnennung – Version 2.0</a>; Daten verändert (Anlagen je Gemeinde gezählt, zuständiger Netzbetreiber abgeleitet) ·
-    Gemeinde- und Ländergrenzen: © <a href="https://www.bkg.bund.de">BKG</a> (2026) <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>, Datenquellen: <a href="https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_vg_nuts.pdf">sgx.geodatenzentrum.de/…/datenquellen_vg_nuts.pdf</a>; Daten verändert (vereinfacht, gerundet) ·
-    Karte mit d3.js (ISC).</p>
-  <p>Erstellt mit Unterstützung des KI-Assistenten Claude (Anthropic) unter Verantwortung des Autors; jeder Wert am Original geprüft.</p>
+  <p>Erstellt mit Unterstützung des KI-Assistenten Claude (Anthropic) unter Verantwortung des Autors · Fehler gefunden? <a href="https://github.com/pstrittmatter13/bkz-karte/issues">Hinweis über GitHub</a></p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=1.3"></script>
+<script src="assets/app.js?v=1.6"></script>
 </body>
 </html>
