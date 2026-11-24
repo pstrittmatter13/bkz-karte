@@ -28,6 +28,21 @@ Netzbetreiber verlangen beim Anschluss an Hoch- oder Mittelspannung einen Baukos
 
 Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 
+## Wie Datensatz und Karte entstanden sind
+
+**Werte erheben**
+1. **Auswahl:** alle 808 Stromverteilnetzbetreiber der BNetzA-Liste der Erlösobergrenzen 2026, nach Größe sortiert; durchsucht bis 90 % der Erlösobergrenzen (234 Netzbetreiber).
+2. **Suche:** Website jedes Netzbetreibers (Netzanschluss, Preise, Downloads) und Websuche nach dem Preisblatt; ein zweiter Durchgang für alle ohne Fund. Seiten, die automatische Abrufe sperren, wurden im Browser von Hand geladen.
+3. **Erfassung:** jedes Preisblatt als Datei gesichert und mit SHA-256-Prüfsumme festgehalten; Werte netto in der Einheit des Blatts übernommen, Netzebene vereinheitlicht, Rechenmethode, Abschläge und Speicherregeln aus dem Text kodiert.
+4. **Regeln:** Ein Wert zählt, wenn das Blatt am Stichtag 24.11.2026 gilt, der Wert im Original nachgelesen ist und eindeutig einer Ebene oberhalb der Niederspannung gehört; jeder Ausschluss ist mit Grund vermerkt.
+5. **Prüfung:** Stichprobe von 40 Werten durch den Autor; zwei unabhängige Prüfungen von zusammen 60 zufällig gezogenen Dokumenten gegen das Original, mit vorab festgelegten Fehlerarten (0 Fehler bei Wert, Einheit und Netzebene; Fehler in Zusatzangaben und ein übersehenes Preisblatt wurden korrigiert); danach Nachsuche bei den größten Netzbetreibern ohne Wert; Regelprüfung per Skript.
+
+**Karte bauen**
+
+6. **Netzbetreiber je Gemeinde:** aus dem Marktstammdatenregister (8,2 Mio. Anlagen in Betrieb) gezählt, an welchen Netzbetreiber die Anlagen einer Gemeinde auf welcher Spannungsebene angeschlossen sind; zuständig ist der mit den meisten Anschlüssen.
+7. **Verknüpfen:** Netzbetreiber im Datensatz und im Register über die Registernummer; Gemeindegrenzen vom BKG.
+8. **Seite:** statisches HTML, vollständig aus den Skripten in `src/` erzeugt – derselbe Stand ergibt dieselbe Karte.
+
 ## Woher jeder Wert kommt
 
 Jeder Wert lässt sich bis zum Preisblatt zurückverfolgen. Im Datensatz steht zu jedem Wert die Adresse des Preisblatts beim Netzbetreiber und eine Prüfsumme (SHA-256) der Datei, die ausgewertet wurde. Wer das Preisblatt selbst lädt, kann so prüfen, ob es genau dieses Dokument ist.
