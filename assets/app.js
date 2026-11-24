@@ -128,7 +128,7 @@
     const kopf = `<h3 class="${aktiv ? "netz-aktiv" : ""}">${titel}`;
     if (!z) return `${kopf}</h3><p class="meta">${titel.startsWith("MS")
       ? "Im MaStR ist in dieser Gemeinde kein Anschluss registriert (meist gemeindefreies Gebiet)."
-      : "Nicht eindeutig: kein HS-Anschluss in der Gemeinde, und im Kreis weniger als 10 HS-Anschlüsse oder kein Netzbetreiber mit mindestens 60 %."}</p>`;
+      : `In dieser Gegend sind kaum Anlagen direkt am Hochspannungsnetz angeschlossen. Das HS-Netz gibt es hier, aber der Betreiber lässt sich aus dem Marktstammdatenregister nicht sicher ableiten (in der Gemeinde kein HS-Anschluss, im Kreis weniger als 10 oder keine klare Mehrheit). Den zuständigen Netzbetreiber je Adresse nennt <a href="https://www.vnbdigital.de" target="_blank" rel="noopener">VNBdigital</a>.`}</p>`;
     const [nr, anteil, n, basis, kand] = z, v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
     const herkunft = basis === "NS" ? `abgeleitet aus ${n} NS-Anschlüssen (kein MS-Anschluss registriert)` :
       basis === "Kreis" ? `${n} HS- und HS/MS-Anschlüssen im Kreis (keiner in der Gemeinde)` :
@@ -196,7 +196,7 @@
     treffer = gemSortiert.filter(x => x.k.startsWith(q)).sort((a, b) => b.ew - a.ew)
       .concat(gemSortiert.filter(x => !x.k.startsWith(q) && x.k.includes(q)).sort((a, b) => b.ew - a.ew)).slice(0, 8);
     aktiv = treffer.length ? 0 : -1;
-    liste.innerHTML = treffer.length ? treffer.map((x, i) => `<li role="option" data-i="${i}" aria-selected="${i === aktiv}">${esc(x.n)}<small>${x.ew.toLocaleString("de-DE")} EW</small></li>`).join("")
+    liste.innerHTML = treffer.length ? treffer.map((x, i) => `<li role="option" data-i="${i}" aria-selected="${i === aktiv}">${esc(x.n)}<small>${x.ew.toLocaleString("de-DE")} Einwohner</small></li>`).join("")
       : `<li aria-disabled="true"><small>keine Gemeinde gefunden</small></li>`;
     liste.hidden = false; eingabe.setAttribute("aria-expanded", "true");
   }

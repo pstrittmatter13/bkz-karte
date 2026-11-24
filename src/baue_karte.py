@@ -159,6 +159,7 @@ for a in ags_liste:
         stat["hs_keiner"] += 1
     gem[a] = e
 
+
 # Nur Netzbetreiber, die in der Karte oder im Datensatz vorkommen
 genutzt = {x for e in gem.values() for k in ("ms", "hs") if k in e for x in [e[k][0]] + [y[0] for y in e[k][4]]}
 genutzt |= set(vnb)
