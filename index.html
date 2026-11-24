@@ -5,41 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BKZ-Karte Deutschland</title>
 <meta name="description" content="Baukostenzuschüsse (BKZ) der Stromverteilnetzbetreiber oberhalb der Niederspannung, Deutschland 2026 – je Wert mit Preisblatt belegt.">
-<link rel="stylesheet" href="assets/style.css?v=1.1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=1.3">
 </head>
 <body>
 <header class="kopf">
-  <h1>Baukostenzuschüsse oberhalb der Niederspannung</h1>
-  <p class="unter">Deutschland · Stichtag <span id="stichtag">24.11.2026</span> · jeder Wert aus dem veröffentlichten Preisblatt des Netzbetreibers, mit Fundstelle und Prüfsumme</p>
+  <p class="eyebrow">Offener Datensatz · Deutschland · Stichtag <span id="stichtag">24.11.2026</span></p>
+  <h1>Baukostenzuschüsse für Netzanschlüsse</h1>
+  <p class="unter">Oberhalb der Niederspannung, je Gemeinde und Netzebene. Jeder Wert stammt aus dem veröffentlichten Preisblatt des Netzbetreibers – mit Fundstelle und Prüfsumme.</p>
   <div id="kennzahlen" class="kennzahlen" aria-label="Kennzahlen"></div>
 </header>
 
 <main>
-  <section class="steuerung" aria-label="Auswahl">
-    <label>Netzebene
-      <select id="ebene">
-        <option value="HS">HS – Hochspannung</option>
-        <option value="HS/MS">HS/MS – Umspannung</option>
-        <option value="MS" selected>MS – Mittelspannung</option>
-        <option value="MS/NS">MS/NS – Umspannung</option>
-      </select>
-    </label>
-    <label>Gemeinde suchen
-      <input id="suche-gem" type="search" placeholder="z. B. Konstanz" list="gem-liste" autocomplete="off">
+  <section class="leiste" aria-label="Auswahl">
+    <div class="feld">
+      <span class="feld-titel" id="ebene-titel">Netzebene</span>
+      <div class="segment" role="radiogroup" aria-labelledby="ebene-titel" id="ebene">
+        <button type="button" role="radio" data-e="HS" title="Hochspannung">HS</button>
+        <button type="button" role="radio" data-e="HS/MS" title="Umspannung Hoch-/Mittelspannung">HS/MS</button>
+        <button type="button" role="radio" data-e="MS" title="Mittelspannung">MS</button>
+        <button type="button" role="radio" data-e="MS/NS" title="Umspannung Mittel-/Niederspannung">MS/NS</button>
+      </div>
+    </div>
+    <div class="feld feld-suche">
+      <label class="feld-titel" for="suche-gem">Gemeinde suchen</label>
+      <div class="suche">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="suche-gem" type="search" placeholder="z. B. Konstanz" list="gem-liste" autocomplete="off">
+      </div>
       <datalist id="gem-liste"></datalist>
-    </label>
-    <div id="legende" class="legende" aria-label="Legende"></div>
+    </div>
+    <div class="feld feld-legende">
+      <span class="feld-titel">BKZ in €/kW netto</span>
+      <div id="legende" class="legende" aria-label="Legende"></div>
+    </div>
   </section>
 
   <div class="raster">
     <section class="karte-box">
       <svg id="karte" role="img" aria-label="Karte der Gemeinden, eingefärbt nach Baukostenzuschuss"></svg>
       <div id="tooltip" class="tooltip" hidden></div>
-      <p class="hinweis">Mausrad/Ziehen: zoomen und verschieben · Klick auf eine Gemeinde zeigt Netzbetreiber, Werte und Beleg.</p>
+      <p class="hinweis">Mausrad oder Ziehen: zoomen und verschieben · Klick auf eine Gemeinde: Netzbetreiber, Werte und Beleg</p>
     </section>
     <aside id="panel" class="panel" aria-live="polite">
       <h2>Gemeinde wählen</h2>
-      <p>Klicke auf die Karte. Angezeigt werden der zuständige Netzbetreiber für das MS-Netz und für das HS-Netz, ihre BKZ je Ebene, wie sie rechnen und wo der Wert im Preisblatt steht.</p>
+      <p class="meta">Klicke auf die Karte oder suche eine Gemeinde. Angezeigt werden der zuständige Netzbetreiber für das MS- und das HS-Netz, seine BKZ je Ebene, wie er rechnet und wo der Wert im Preisblatt steht.</p>
       <div id="regionen"></div>
     </aside>
   </div>
@@ -91,6 +103,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=1.1"></script>
+<script src="assets/app.js?v=1.3"></script>
 </body>
 </html>

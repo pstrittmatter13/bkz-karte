@@ -75,13 +75,12 @@
   }
 
   function legende() {
-    const t = [`<span class="k"><i style="background:${FARBEN[0]}"></i>&lt; ${GRENZEN[0]}</span>`];
-    for (let i = 1; i < FARBEN.length - 1; i++)
-      t.push(`<span class="k"><i style="background:${FARBEN[i]}"></i>${GRENZEN[i - 1]}–${GRENZEN[i]}</span>`);
-    t.push(`<span class="k"><i style="background:${FARBEN.at(-1)}"></i>≥ ${GRENZEN.at(-1)} €/kW</span>`);
-    t.push(`<span class="k"><i style="background:${GRAU_KEIN}"></i>gesucht, kein Wert veröffentlicht</span>`);
-    t.push(`<span class="k"><i style="background:${GRAU_NICHT};outline:1px solid var(--linie)"></i>noch nicht erhoben oder Netzbetreiber nicht eindeutig</span>`);
-    document.getElementById("legende").innerHTML = t.join("");
+    const balken = FARBEN.map((f, i) => `<i style="background:${f}" title="${i === 0 ? "< " + GRENZEN[0] : i === FARBEN.length - 1 ? "≥ " + GRENZEN.at(-1) : GRENZEN[i - 1] + "–" + GRENZEN[i]} €/kW"></i>`).join("");
+    const ticks = ["", ...GRENZEN].map(g => `<span>${g}</span>`).join("");
+    document.getElementById("legende").innerHTML =
+      `<div class="skala-wrap"><div class="skala">${balken}</div><div class="skala-ticks">${ticks}</div></div>
+       <span class="chip-grau"><i style="background:${GRAU_KEIN}"></i>gesucht, kein Wert veröffentlicht</span>
+       <span class="chip-grau"><i style="background:${GRAU_NICHT}"></i>nicht erhoben / nicht eindeutig</span>`;
   }
 
   // Mediane je Region (über Netzbetreiber, nicht über Fläche)
@@ -160,7 +159,20 @@
     const f = nachName.get(e.target.value) || [...nachName.entries()].find(([k]) => k.toLowerCase().startsWith(e.target.value.toLowerCase()))?.[1];
     if (f) waehle(f);
   });
-  document.getElementById("ebene").addEventListener("change", e => { ebene = e.target.value; faerben(); });
+  const knoepfe = [...document.querySelectorAll("#ebene button")];
+  function setzeEbene(e) {
+    ebene = e;
+    knoepfe.forEach(b => b.setAttribute("aria-checked", String(b.dataset.e === e)));
+    faerben();
+  }
+  knoepfe.forEach(b => b.addEventListener("click", () => setzeEbene(b.dataset.e)));
+  document.getElementById("ebene").addEventListener("keydown", ev => {     // Pfeiltasten wie bei Optionsfeldern
+    const i = knoepfe.findIndex(b => b.dataset.e === ebene);
+    const j = ev.key === "ArrowRight" ? i + 1 : ev.key === "ArrowLeft" ? i - 1 : null;
+    if (j === null) return;
+    const b = knoepfe[(j + knoepfe.length) % knoepfe.length]; b.focus(); setzeEbene(b.dataset.e); ev.preventDefault();
+  });
+  knoepfe.forEach(b => b.setAttribute("aria-checked", String(b.dataset.e === ebene)));
 
   // Tabelle aller VNB mit Wert
   const zeilen = Object.entries(K.vnb).filter(([, v]) => Object.keys(v.kenn).length).map(([nr, v]) => {
