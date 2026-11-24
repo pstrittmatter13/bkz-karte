@@ -1,6 +1,6 @@
 """Gemeinde- und Ländergrenzen für die Karte vorbereiten.
 
-Quelle: © GeoBasis-DE / BKG, VG250-EW, Gebietsstand 31.12.2025 (Ebenen, GeoPackage, UTM32s / EPSG:25832),
+Quelle: © BKG (2026) dl-de/by-2-0, VG250-EW, Gebietsstand 31.12.2025 (Ebenen, GeoPackage, UTM32s / EPSG:25832),
 Datenlizenz Deutschland – Namensnennung – Version 2.0 (dl-de/by-2-0).
 Download: https://daten.gdz.bkg.bund.de/produkte/vg/vg250-ew_ebenen_1231/aktuell/vg250-ew_12-31.utm32s.gpkg.ebenen.zip
 

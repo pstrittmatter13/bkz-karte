@@ -1,0 +1,46 @@
+Lizenzen dieses Repositoriums
+==============================
+
+1. Daten, Karte und Texte – Creative Commons Namensnennung 4.0 International (CC BY 4.0)
+   Gilt für: datensatz/, data/karte.json, data/mastr_zaehlung.csv, data/mastr_netzbetreiber.csv,
+   data/mastr_stand.json, zuordnung_hand.csv, README.md, METHODIK.md und die Inhalte der Seite.
+   © 2026 Paul Schneider-Strittmatter
+   Lizenztext: https://creativecommons.org/licenses/by/4.0/legalcode.de
+   Namensnennung bitte wie in CITATION.cff bzw. README.md („Zitieren“).
+
+2. Programmcode – MIT-Lizenz
+   Gilt für: src/, assets/app.js, assets/style.css, index.html (Markup).
+
+   Copyright (c) 2026 Paul Schneider-Strittmatter
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+3. Daten Dritter (bleiben unter ihrer eigenen Lizenz)
+   a) Marktstammdatenregister (MaStR) der Bundesnetzagentur, Gesamtdatenexport vom 24.11.2026
+      (https://www.marktstammdatenregister.de/MaStR/Datendownload),
+      Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0).
+      Daten verändert: Anlagen je Gemeinde, Spannungsebene und Netzbetreiber gezählt (data/mastr_zaehlung.csv)
+      und daraus der zuständige Netzbetreiber je Gemeinde abgeleitet (METHODIK.md).
+   b) Verwaltungsgebiete VG250-EW, Gebietsstand 31.12.2025:
+      © BKG (2026) dl-de/by-2-0, Datenquellen: https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_vg_nuts.pdf
+      Daten verändert: Gemeinden und Länder vereinfacht (Toleranz 400 m bzw. 1.200 m), Koordinaten auf 10 m gerundet,
+      nur Landflächen (data/gemeinden.geojson, data/laender.geojson).
+   c) BKZ-Werte: aus den veröffentlichten Preisblättern der Netzbetreiber (je Wert URL, Fundstelle und SHA-256 im
+      Datensatz). Die Originaldokumente sind nicht enthalten; maßgeblich sind die Preisblätter der Netzbetreiber.
+   d) d3.js 7.8.5 (ISC-Lizenz, © Mike Bostock), zur Laufzeit von cdnjs geladen, nicht im Repositorium.

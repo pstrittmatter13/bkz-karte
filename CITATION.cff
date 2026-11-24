@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "Wenn Sie Daten oder Karte verwenden, zitieren Sie bitte wie folgt."
+type: dataset
+title: "BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026"
+abstract: >-
+  Datensatz und interaktive Karte der Baukostenzuschüsse (BKZ), die deutsche Stromverteilnetzbetreiber
+  für Netzanschlüsse auf Hochspannung, Umspannung HS/MS, Mittelspannung und Umspannung MS/NS erheben.
+  329 Werte von 124 Netzbetreibern (75,8 % der Erlösobergrenzen 2026), jeder Wert aus dem veröffentlichten
+  Preisblatt mit Fundstelle und SHA-256-Prüfsumme, mit Kodierung der Berechnungsmethode. Der zuständige
+  Netzbetreiber je Gemeinde und Spannungsebene ist aus dem Marktstammdatenregister der Bundesnetzagentur abgeleitet.
+authors:
+  - family-names: Schneider-Strittmatter
+    given-names: Paul
+    affiliation: "HTWG Hochschule Konstanz – Technik, Wirtschaft und Gestaltung"
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # vor der Zenodo-Veröffentlichung ergänzen
+version: "1.0.0"
+date-released: "2026-11-24"
+url: "https://pstrittmatter13.github.io/bkz-karte/"
+repository-code: "https://github.com/pstrittmatter13/bkz-karte"
+license: CC-BY-4.0
+keywords:
+  - Baukostenzuschuss
+  - Netzanschluss
+  - Verteilnetzbetreiber
+  - Mittelspannung
+  - Batteriespeicher
+  - Marktstammdatenregister
+  - grid connection charge
+  - distribution system operator
+  - Germany
+references:
+  - type: database
+    title: "Marktstammdatenregister – Gesamtdatenexport (24.11.2026)"
+    authors:
+      - name: "Bundesnetzagentur"
+    url: "https://www.marktstammdatenregister.de/MaStR/Datendownload"
+    license: "dl-de/by-2-0"
+  - type: data
+    title: "Verwaltungsgebiete 1:250 000 mit Einwohnerzahlen (VG250-EW), Stand 31.12.2025"
+    authors:
+      - name: "Bundesamt für Kartographie und Geodäsie (BKG)"
+    url: "https://gdz.bkg.bund.de"
+    license: "dl-de/by-2-0"

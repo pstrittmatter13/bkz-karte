@@ -1,7 +1,7 @@
 """Kartendaten aus dem BKZ-Datensatz und der MaStR-Zählung erzeugen.
 
-Aufruf:  python src/baue_karte.py [Ordner des Datensatzes]
-         Standard: ../OneDrive/.../01_Literatur/BKZ/Veroeffentlichung (Veröffentlichungsfassung)
+Aufruf:  python src/baue_karte.py <Ordner der Veröffentlichungsfassung des Datensatzes>
+         (oder Umgebungsvariable BKZ_DATENSATZ)
 Eingaben: <Datensatz>/bkz_werte_lang.csv, bkz_quellen.csv, grundgesamtheit_mastr.csv, download_log.csv, README.md
           data/mastr_zaehlung.csv, data/mastr_netzbetreiber.csv, data/mastr_stand.json (aus netzbetreiber_gemeinde.py)
           zuordnung_hand.csv (Ausnahmen beim Abgleich Datensatz -> MaStR-Nummer, mit Begründung)
@@ -26,9 +26,9 @@ import sys
 from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STD = os.path.join(os.path.expanduser("~"), "OneDrive", "Dokumente O", "1_Uni", "01_Bachelorarbeit",
-                   "01_Literatur", "BKZ", "Veroeffentlichung")
-DS = sys.argv[1] if len(sys.argv) > 1 else STD
+DS = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("BKZ_DATENSATZ")
+if not DS or not os.path.isfile(os.path.join(DS, "bkz_werte_lang.csv")):
+    sys.exit("Ordner der Veröffentlichungsfassung angeben (enthält bkz_werte_lang.csv), siehe README „Aktualisieren“.")
 KREIS_MIN_N, KREIS_MIN_ANTEIL = 10, 0.6
 EBENEN = ["HöS/HS", "HS", "HS/MS", "MS", "MS/NS", "NS"]
 GRUPPE = {"HöS/HS": "hs", "HS": "hs", "HS/MS": "hs", "MS": "ms", "MS/NS": "ms", "NS": "ms"}
