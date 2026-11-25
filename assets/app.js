@@ -4,7 +4,6 @@
   const pct = x => Math.round(x * 100) + " %";
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const datum = s => s ? s.split("-").reverse().join(".") : "";
-  const archiv = url => "https://web.archive.org/web/*/" + url;   // vorhandene Kopien in der Wayback Machine
 
   const [K, GEM, LAN] = await Promise.all([
     d3.json("data/karte.json"), d3.json("data/gemeinden.geojson"), d3.json("data/laender.geojson")]);
@@ -109,19 +108,17 @@
       (reg[r] ??= []).push(k.w);
     }
     const alle = Object.values(reg).flat();
-    const zeilen = ["Nord", "Ost", "West", "Süd", "bundesweit"].filter(r => reg[r] || r === "bundesweit").map(r => {
+    const kacheln = ["Nord", "Ost", "West", "Süd", "bundesweit"].filter(r => reg[r] || r === "bundesweit").map(r => {
       const a = r === "bundesweit" ? alle : reg[r];
-      return `<tr><td>${r}</td><td class="z">${a.length}</td><td class="z">${fmt(d3.median(a))}</td></tr>`;
+      return `<div class="reg${r === "bundesweit" ? " reg-alle" : ""}"><span>${r}</span><b>${fmt(d3.median(a), 1)}</b><small>€/kW · ${a.length} VNB</small></div>`;
     });
-    const el = document.getElementById("regionen");
-    if (el) el.innerHTML = `<h3>${NAME_EBENE[ebene]}: Median je Region</h3><table class="regtab"><tr><th>Region</th><th class="z">VNB</th><th class="z">€/kW</th></tr>${zeilen.join("")}</table>
-      <p class="hinweis">Median über die Netzbetreiber mit Wert, nicht über Fläche oder Anschlüsse.</p>`;
+    document.getElementById("regionen-titel").textContent = `Median je Region – ${NAME_EBENE[ebene]} (${ebene})`;
+    document.getElementById("regionen").innerHTML = kacheln.join("");
   }
 
   function belegLinks(d) {
     if (!d.url) return "";
-    return `<div class="links"><a href="${esc(d.url)}" target="_blank" rel="noopener" title="Adresse beim Netzbetreiber, abgerufen 24.11.2026">Original ↗</a>
-      <a href="${esc(archiv(d.url))}" target="_blank" rel="noopener" title="Gespeicherte Kopien in der Wayback Machine (archive.org)">Archiv ↗</a></div>`;
+    return `<div class="links"><a href="${esc(d.url)}" target="_blank" rel="noopener" title="Adresse beim Netzbetreiber, abgerufen 24.11.2026">Preisblatt beim Netzbetreiber ↗</a></div>`;
   }
 
   function block(titel, z, ebenen, aktiv, belegeOben) {
@@ -175,8 +172,7 @@
     const hs = b => block("HS-Netz", z.hs, ["HöS/HS", "HS", "HS/MS"], hsZuerst, b);
     document.getElementById("panel").innerHTML =
       `<h2>${esc(p.name)}</h2><p class="meta">AGS ${esc(p.ags)} · ${p.ew.toLocaleString("de-DE")} Einwohner</p>` +
-      (hsZuerst ? hs(false) + ms(gleich) : ms(false) + hs(gleich)) + `<div id="regionen"></div>`;
-    regionen();
+      (hsZuerst ? hs(false) + ms(gleich) : ms(false) + hs(gleich));
   }
 
   function waehle(f, mitZoom) {
@@ -247,7 +243,7 @@
       .sort((a, b) => { const x = a[sortK], y = b[sortK]; const c = x == null ? 1 : y == null ? -1 : typeof x === "number" ? x - y : String(x).localeCompare(y, "de"); return sortAuf ? c : -c; });
     document.querySelector("#tabelle tbody").innerHTML = r.map(z => `<tr><td>${esc(z.name)}</td><td>${esc(z.region)}</td><td>${esc(z.land)}</td>
       ${["HS", "HS/MS", "MS", "MS/NS"].map(e => `<td class="z">${fmt(z[e])}</td>`).join("")}<td>${esc(z.methode)}</td>
-      <td class="nowrap">${z.url ? `<a href="${esc(z.url)}" target="_blank" rel="noopener">Original</a> · <a href="${esc(archiv(z.url))}" target="_blank" rel="noopener">Archiv</a>` : ""}</td></tr>`).join("");
+      <td class="nowrap">${z.url ? `<a href="${esc(z.url)}" target="_blank" rel="noopener">Original ↗</a>` : ""}</td></tr>`).join("");
     document.getElementById("tab-anzahl").textContent = `${r.length} von ${zeilen.length}`;
   }
   document.getElementById("suche-vnb").addEventListener("input", tabelle);

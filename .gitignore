@@ -1,3 +1,4 @@
 rohdaten/
 __pycache__/
 _pylib/
+.claude/

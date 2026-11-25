@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1.7">
+<link rel="stylesheet" href="assets/style.css?v=1.8">
 </head>
 <body>
 <header class="kopf">
@@ -44,6 +44,12 @@
     </div>
   </section>
 
+  <section class="regionen-leiste" aria-labelledby="regionen-titel">
+    <span class="feld-titel" id="regionen-titel">Median je Region</span>
+    <div id="regionen" class="regionen"></div>
+    <p class="hinweis">Jeder Netzbetreiber mit Wert zählt einmal – unabhängig von Größe, Fläche oder Anschlüssen. Region nach Hauptnetzgebiet des Netzbetreibers.</p>
+  </section>
+
   <div class="raster">
     <section class="karte-box">
       <svg id="karte" role="img" aria-label="Karte der Gemeinden, eingefärbt nach Baukostenzuschuss"></svg>
@@ -54,7 +60,6 @@
     <aside id="panel" class="panel" aria-live="polite">
       <h2>Gemeinde wählen</h2>
       <p class="meta">Klicke auf die Karte oder suche eine Gemeinde. Angezeigt werden die zuständigen Netzbetreiber, ihre BKZ je Ebene, wie sie rechnen und wo der Wert im Preisblatt steht.</p>
-      <div id="regionen"></div>
     </aside>
   </div>
 
@@ -77,7 +82,7 @@
         <tbody></tbody>
       </table>
     </div>
-    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. „Original“ führt zur Adresse beim Netzbetreiber (Stand 24.11.2026), „Archiv“ zu gespeicherten Kopien in der Wayback Machine.</p>
+    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. „Original“ führt zur Adresse des Preisblatts beim Netzbetreiber (abgerufen 24.11.2026).</p>
   </section>
 
   <section class="kasten">
@@ -128,6 +133,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=1.7"></script>
+<script src="assets/app.js?v=1.8"></script>
 </body>
 </html>
