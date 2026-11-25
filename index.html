@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=2.5">
+<link rel="stylesheet" href="assets/style.css?v=2.7">
 </head>
 <body>
 <header class="kopf">
@@ -93,8 +93,8 @@
     <p class="meta">Was die Karte zeigt – und was nicht.</p>
     <div class="kacheln">
       <div class="kachel"><h3>Nur größere Netzbetreiber gesucht</h3><p>Gesucht wurde nach Größe, keine Zufallsstichprobe. Die <b id="g-vnb">125</b> Netzbetreiber mit Wert stehen für <b><span id="g-eog">77,3</span> %</b> der Erlösobergrenzen 2026. Kleine Netzbetreiber veröffentlichen selten einen Wert.</p></div>
-      <div class="kachel"><h3>Grau ≠ kein BKZ</h3><p><b>Dunkelgrau:</b> gesucht, aber kein Wert, der zählt (z. B. nur „auf Anfrage“, eigene Formel). <b>Hellgrau:</b> nicht gesucht oder Netzbetreiber unklar.</p></div>
-      <div class="kachel"><h3>Netzgebiete genähert</h3><p>Aus dem Marktstammdatenregister: zuständig ist, wer die meisten Anlagen der Gemeinde anschließt. HS-Netz nur bei klarer Mehrheit; Lücken teils aus VNBdigital, der Plattform der Netzbetreiber (im Gemeinde-Fenster gekennzeichnet).</p></div>
+      <div class="kachel"><h3>Grau ≠ kein BKZ</h3><p><b>Dunkelgrau:</b> gesucht, aber kein Wert, der zählt (z. B. nur „auf Anfrage“ oder erst ab 2027 gültig). <b>Hellgrau:</b> nicht gesucht oder Netzbetreiber unklar.</p></div>
+      <div class="kachel"><h3>Netzgebiete genähert</h3><p>Netzgebiete sind nicht amtlich veröffentlicht. Zuständig ist hier, wer in der Gemeinde die meisten im Marktstammdatenregister registrierten Anlagen anschließt: für MS und MS/NS die an der Mittelspannung (ohne solche Anlagen die an der Niederspannung), für HS und HS/MS die an der Hochspannung. Hängt in der Gemeinde keine Anlage an der Hochspannung, gilt der Kreis (mindestens 10 Anlagen, ein Netzbetreiber mit mindestens 60 %), sonst VNBdigital, die Plattform der Netzbetreiber; sonst bleibt die Gemeinde grau.</p></div>
       <div class="kachel"><h3>Werte wie veröffentlicht</h3><p>Netto, am Stichtag gültig, mit pauschalen Abschlägen. <b>Ohne</b> Speicher- und Flexrabatte.</p></div>
       <div class="kachel"><h3>Median: jeder Netzbetreiber einmal</h3><p>Jeder Netzbetreiber zählt einmal – unabhängig von Größe, Fläche oder Anschlüssen.</p></div>
       <div class="kachel"><h3>Geprüft</h3><p>Jeder Wert am Original nachgelesen; Stichprobe und zwei KI-Prüfungen, 0 Wertfehler. Prüfung durch eine weitere Person steht aus.</p></div>
@@ -136,6 +136,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=2.6"></script>
+<script src="assets/app.js?v=2.7"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ Keine Werte werden geschätzt. Wo ein Netzbetreiber keinen BKZ veröffentlicht h
 
 ## 1 BKZ-Werte
 
-Übernommen werden die Werte, die im Datensatz in die Auswertung gehen (`in_auswertung = ja`): am Stichtag gültig, Ebene oberhalb der Niederspannung, Wert am Original geprüft, keine Sonderformel oder abgeleiteten Werte. Regeln, Ausschlussgründe und Prüfung: `datensatz/README.md`. Einheit €/kW netto; €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe mit 1,0 (cos φ = 1, Annahme des Datensatzes).
+Übernommen werden die Werte, die im Datensatz in die Auswertung gehen (`in_auswertung = ja`): am Stichtag gültig, Ebene oberhalb der Niederspannung, Wert am Original geprüft, keine abgeleiteten Werte. Regeln, Ausschlussgründe und Prüfung: `datensatz/README.md`. Einheit €/kW netto; €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe mit 1,0 (cos φ = 1, Annahme des Datensatzes).
 
 Hat ein Netzbetreiber mehrere am Stichtag gültige Werte für eine Ebene, gilt der erste in Dokumentreihenfolge des Datensatzes; nach den Regeln des Datensatzes kommt das nicht vor.
 
@@ -30,7 +30,7 @@ Kreisfreie Städte stehen im MaStR teils mit fünfstelligem Schlüssel; sie werd
 
 **Umfang (Export 24.11.2026):** 9,84 Mio. Einheiten gelesen; 8,21 Mio. in Betrieb mit Gemeinde und Netzanschlusspunkt gezählt; 1,38 Mio. Einheiten in Betrieb ohne Netzanschlusspunkt im Register (überwiegend Kleinstanlagen) gehen nicht ein.
 
-Bei Gleichstand gewinnt die kleinere MaStR-Nummer, damit das Ergebnis reproduzierbar ist. Das Panel zeigt zu jeder Gemeinde den Anteil des gewählten Netzbetreibers, die Zahl der Anschlüsse und die weiteren Netzbetreiber.
+Bei Gleichstand gewinnt die kleinere MaStR-Nummer, damit das Ergebnis reproduzierbar ist. Das Gemeinde-Fenster nennt den zugeordneten Netzbetreiber mit Sitz und MaStR-Nummer und kennzeichnet die Ersatzwege (über NS, über den Kreis, VNBdigital); Anteile und weitere Netzbetreiber stehen in `data/karte.json`.
 
 **Warum getrennt nach Netz:** An einem Ort betreiben oft verschiedene Unternehmen verschiedene Ebenen (z. B. ein Stadtwerk das MS-Netz, ein Regionalversorger das HS-Netz). Eine einzige Fläche je Ort wäre für eine der Ebenen falsch.
 

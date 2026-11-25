@@ -50,7 +50,7 @@
   function ohneWertText(v) {
     const w = v.docs.flatMap(id => K.docs[id].werte);
     const oben = w.filter(x => x.ebene !== "NS");
-    if (oben.length) return "Wert veröffentlicht, zählt nicht: " + (GRUND[oben[0].grund] || oben[0].grund);
+    if (oben.length) return "Wert veröffentlicht, zählt aber nicht – " + (GRUND[oben[0].grund] || oben[0].grund);
     if (w.length) return "nur ein Niederspannungs-Wert veröffentlicht";
     return STATUS[v.status] || v.status;
   }
@@ -168,14 +168,11 @@
     const [nr, anteil, n, basis, kand] = z, v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
     if (basis === "VNBdigital") {
       const v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
-      return blockWerte(`${kopf}: ${esc(v.name)}</h3><p class="meta">Warum dieser Netzbetreiber: einziger Netzbetreiber mit Hochspannung in der Gemeinde laut ${vdLink} – im Marktstammdatenregister hängt hier keine Anlage direkt an der Hochspannung.</p>`, v, ebenen, belegeOben);
+      return blockWerte(`${kopf}: ${esc(v.name)}</h3><p class="meta">${v.ort ? "Sitz " + esc(v.ort) + "<br>" : ""}Zuordnung laut ${vdLink}</p>`, v, ebenen, belegeOben);
     }
-    const herkunft = basis === "NS" ? `${n} Anlagen an der Niederspannung (an Mittelspannung ist hier keine registriert)` :
-      basis === "Kreis" ? `${n} Anlagen an HS oder HS/MS im Kreis (in der Gemeinde keine)` :
-        `${n} Anlagen, die in der Gemeinde an ${titel.startsWith("MS") ? "MS oder MS/NS" : "HS oder HS/MS"} angeschlossen sind`;
-    const andere = kand.slice(1).map(([k, c]) => `${esc(K.vnb[k]?.name || "MaStR " + k)} (${c})`).join(", ");
+    const naeherung = basis === "NS" ? "<br>zugeordnet über die Niederspannung" : basis === "Kreis" ? "<br>zugeordnet über den Kreis" : "";
     let h = `${kopf}: ${esc(v.name)}</h3>
-      <p class="meta">${v.ort ? "Sitz " + esc(v.ort) + " · " : ""}Marktstammdatenregister ${esc(nr)}<br>Warum dieser Netzbetreiber: ${pct(anteil)} von ${herkunft} (Anlagen = Erzeugung und Speicher)${andere ? "<br>auch angeschlossen bei: " + andere : ""}</p>`;
+      <p class="meta">${v.ort ? "Sitz " + esc(v.ort) + "<br>" : ""}Marktstammdatenregister-Nr. ${esc(nr)}${naeherung}</p>`;
     return blockWerte(h, v, ebenen, belegeOben);
   }
   function blockWerte(h, v, ebenen, belegeOben) {
@@ -191,7 +188,7 @@
       }
     }
     h += zaehlt.length ? `<table><tr><th>Ebene</th><th class="z">BKZ in €/kW netto</th></tr>${zaehlt.join("")}</table>`
-      : `<p class="meta"><span class="chip">kein Wert, der zählt</span> Grund: ${esc(ohneWertText(v))}</p>`;
+      : `<p class="meta"><span class="chip">kein Wert, der zählt</span><br>Grund: ${esc(ohneWertText(v))}</p>`;
     if (nicht.length) h += `<details><summary>Weitere Werte im Preisblatt, die nicht zählen (${nicht.length})</summary>
       <table><tr><th>Ebene</th><th class="z">€/kW</th><th>warum nicht</th></tr>${nicht.join("")}</table></details>`;
     if (belegeOben) return h + `<p class="meta">Belege: siehe oben (derselbe Netzbetreiber).</p>`;
