@@ -5,7 +5,7 @@ Die Karte zeigt zwei Dinge, die getrennt belegt sind:
 1. **die Baukostenzuschüsse (BKZ)** der Netzbetreiber – aus dem BKZ-Datensatz (Ordner `datensatz/`, dort `README.md`): jeder Wert aus dem veröffentlichten Preisblatt, mit Fundstelle, Archivdatei und SHA-256-Prüfsumme;
 2. **welcher Netzbetreiber in einer Gemeinde zuständig ist** – abgeleitet aus dem Marktstammdatenregister (MaStR) der Bundesnetzagentur.
 
-Keine Werte werden geschätzt. Wo ein Netzbetreiber keinen BKZ veröffentlicht hat oder noch nicht erhoben ist, bleibt die Gemeinde grau.
+Keine Werte werden geschätzt. Wo ein Netzbetreiber keinen BKZ veröffentlicht hat oder sein Preisblatt nicht gesucht wurde, bleibt die Gemeinde grau.
 
 ## 1 BKZ-Werte
 
@@ -24,7 +24,7 @@ Grenzen von Netzgebieten werden in Deutschland nicht amtlich veröffentlicht. Di
 | Netz | gilt für die BKZ-Ebenen | zuständig ist … | wenn keine Anschlüsse dieser Ebene |
 |---|---|---|---|
 | MS-Netz | MS, MS/NS | der Netzbetreiber mit den meisten Anschlüssen auf MS oder MS/NS in der Gemeinde | Mehrheit der NS-Anschlüsse in der Gemeinde (gekennzeichnet „abgeleitet aus NS“) |
-| HS-Netz | HS, HS/MS, HöS/HS | der Netzbetreiber mit den meisten Anschlüssen auf HS oder HS/MS in der Gemeinde | Mehrheit im Kreis, wenn dort mindestens 10 solche Anschlüsse liegen und ein Netzbetreiber mindestens 60 % hat; sonst **keine Zuordnung** („nicht eindeutig“, grau) |
+| HS-Netz | HS, HS/MS, HöS/HS | der Netzbetreiber mit den meisten Anschlüssen auf HS oder HS/MS in der Gemeinde | Mehrheit im Kreis, wenn dort mindestens 10 solche Anschlüsse liegen und ein Netzbetreiber mindestens 60 % hat; sonst VNBdigital (Abschnitt 2a); sonst **keine Zuordnung** („nicht eindeutig“, grau) |
 
 Kreisfreie Städte stehen im MaStR teils mit fünfstelligem Schlüssel; sie werden um „000“ ergänzt. Gemeindeschlüssel ohne Gegenstück in den Gemeindegrenzen (Gemeindefusionen nach dem 31.12.2025) bleiben unberücksichtigt; das betrifft rund 6.200 von 8,2 Mio. Zuordnungen (`data/mastr_stand.json`, Prüfung in `src/baue_karte.py`). Gemeinden ohne jeden Anschluss sind fast ausschließlich gemeindefreie Gebiete (Forste, Seen).
 
@@ -42,6 +42,22 @@ Bei Gleichstand gewinnt die kleinere MaStR-Nummer, damit das Ergebnis reproduzie
 - Fehler im MaStR (falscher Netzbetreiber, veraltete Zuordnung nach Netzübernahme) gehen ein; maßgeblich ist der Stand des Exports.
 - Gemeindegrenzen: Gebietsstand 31.12.2025 (BKG). Gemeindeschlüssel, die sich seitdem geändert haben, werden nicht zugeordnet.
 
+## 2a Zweite Quelle für die HS-Lücke: VNBdigital
+
+**Warum:** Den HS-Betreiber kennt das MaStR nur über Erzeugungs- und Speicheranlagen, die direkt an HS oder HS/MS hängen. In vielen Gegenden gibt es davon keine oder nur wenige (z. B. Zollernalbkreis 0, Kreis Tuttlingen 3). Die Umspannwerke, über die Stadtwerke versorgt werden, stehen nicht im MaStR.
+
+**Quelle:** [VNBdigital](https://www.vnbdigital.de), die gemeinsame Internetplattform der Verteilnetzbetreiber nach § 14e EnWG, betrieben vom BDEW. Die Netzbetreiber tragen ihre Gebiete und Spannungsbereiche selbst ein; der BDEW prüft sie nach seinen Nutzungsbedingungen nicht.
+
+**Vorgehen:** Abgefragt werden nur Gemeinden, denen nach der MaStR-Regel kein HS-Betreiber zugeordnet ist, mit dem Filter Spannungsbereich „Hochspannung“. Zwei Wege mit gleichem Ergebnisformat:
+- *Suche nach Gemeinde* (Pilot, 129 Gemeinden): normale Suche „Ort/Gemeinde“ auf vnbdigital.de, Kreis im Suchtreffer geprüft; Link mit der Gemeindekennung von VNBdigital (`src/vnbdigital_csv.py`).
+- *Abfrage an einem Punkt* (übrige Gemeinden): ein Punkt sicher innerhalb der Gemeindefläche (shapely `point_on_surface`, UTM32 → WGS84), dieselbe Abfrage, die die Kartensuche der Seite nutzt, höchstens eine je Sekunde; Rohantworten werden gespeichert (`src/vnbdigital_abfrage.py`, Spalte `punkt`). Ein Punkt steht für die ganze Gemeinde – grenzen dort zwei HS-Netze aneinander, kann der Punkt im anderen liegen.
+
+Gespeichert werden je Gemeinde die angezeigten Netzbetreiber mit Hochspannung, das Abrufdatum und ein Link, der mit demselben Filter wieder zur Ergebnisseite führt (`zuordnung_vnbdigital.csv`); der Stand kann sich seit dem Abruf geändert haben.
+
+**Regel:** Nennt VNBdigital genau einen Netzbetreiber mit Hochspannung, gilt er für die Gemeinde (Panel: „laut VNBdigital“, mit Link und Abrufdatum). Nennt es mehrere, bleibt die Gemeinde grau und das Panel nennt alle. Die MaStR-Nummer kommt über den Namen aus `data/mastr_netzbetreiber.csv`.
+
+**Stand 25.11.2026:** 132 Gemeinden (Pilot: Kreise Freudenstadt, Rottweil, Schwarzwald-Baar, Tuttlingen, Tübingen, Zollernalb; Test: Lübeck, Neumünster, Ahrensburg); 130 mit einem HS-Betreiber, 2 mit mehreren (Schramberg, Mönchweiler). Die übrigen rund 2.900 Lücken-Gemeinden folgen.
+
 ## 3 Verknüpfung Datensatz ↔ MaStR
 
 Jeder Netzbetreiber im Datensatz trägt seinen Namen laut MaStR (`mastr_name`); darüber wird die MaStR-Nummer aus `datensatz/grundgesamtheit_mastr.csv` gefunden. Ausnahmen mit Begründung: `zuordnung_hand.csv`. Meldet `src/baue_karte.py` einen Wert ohne MaStR-Nummer, fehlt dort ein Eintrag.
@@ -52,4 +68,4 @@ Mediane je Region werden über die Netzbetreiber mit Wert gebildet (ein Wert je 
 
 ## 5 Farbskala
 
-Feste Klassen in €/kW (< 60, 60–90, 90–120, 120–150, 150–180, ≥ 180), für alle Ebenen gleich, damit Karten verschiedener Ebenen und Datenstände vergleichbar bleiben. Einfarbige Skala (hell = niedrig, dunkel = hoch). Zwei Grautöne: „gesucht, kein Wert veröffentlicht“ (Netzbetreiber im Datensatz, ohne Wert auf dieser Ebene) und „noch nicht erhoben“.
+Feste Klassen in €/kW (< 60, 60–90, 90–120, 120–150, 150–180, ≥ 180), für alle Ebenen gleich, damit Karten verschiedener Ebenen und Datenstände vergleichbar bleiben. Einfarbige Skala (hell = niedrig, dunkel = hoch). Zwei Grautöne: „gesucht, aber kein Wert, der zählt“ (Netzbetreiber im Datensatz, ohne Wert auf dieser Ebene) und „nicht gesucht oder Netzbetreiber unklar“.

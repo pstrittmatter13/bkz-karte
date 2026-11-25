@@ -236,3 +236,8 @@ details summary { cursor: pointer; color: var(--ink2); font-size: .84rem; font-w
   }
 }
 .suche input:focus-visible, input[type=search]:focus-visible { outline: none; border-color: var(--akzent); box-shadow: 0 0 0 3px var(--akzent-fl); }
+
+/* Beleg: Prüfangaben eine Ebene tiefer */
+details.technik { margin-top: 8px; }
+details.technik summary { font-size: .78rem; color: var(--ink3); font-weight: 500; }
+details.technik { font-size: .78rem; color: var(--ink3); }

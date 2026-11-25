@@ -130,6 +130,15 @@ for a, d in per_ags.items():
     for e in ("HS", "HS/MS"):
         kreis[a[:5]].update(d[e])
 
+# Zweite Quelle für die HS-Lücke: zuordnung_vnbdigital.csv (Abfrage je Gemeinde auf vnbdigital.de, Filter Hochspannung)
+vnbd = {}
+_vp = os.path.join(ROOT, "zuordnung_vnbdigital.csv")
+if os.path.isfile(_vp):
+    for r in lies(_vp):
+        nrs = [x for x in r["mastr_nr"].split("|") if x]
+        vnbd[r["ags"]] = {"nr": nrs, "namen": [x for x in r["hs_betreiber"].split("|") if x],
+                          "abruf": r["abruf"], "url": r["vnbdigital_url"]}
+
 gem = {}
 stat = collections.Counter()
 for a in ags_liste:
@@ -146,6 +155,10 @@ for a in ags_liste:
             hs, hs_basis = k, "Kreis"
         elif k:
             stat["hs_kreis_zu_unsicher"] += 1
+    if hs is None and a in vnbd and len(vnbd[a]["nr"]) == 1:
+        # Lücke im MaStR: HS-Betreiber laut VNBdigital (einziger Netzbetreiber mit Hochspannung in der Gemeinde)
+        nr_ = vnbd[a]["nr"][0]
+        hs, hs_basis = (nr_, 1.0, 0, [[nr_, 0]]), "VNBdigital"
     e = {}
     if ms:
         e["ms"] = [ms[0], ms[1], ms[2], ms_basis, ms[3]]
@@ -218,6 +231,7 @@ out = {
     "vnb": aus_vnb,
     "docs": {i: d for i, d in dok.items() if d["nr"] or d["werte"]},
     "gem": gem,
+    "vnbdigital": {a: {"namen": v["namen"], "abruf": v["abruf"], "url": v["url"]} for a, v in vnbd.items()},
 }
 with open(os.path.join(ROOT, "data", "karte.json"), "w", encoding="utf-8") as f:
     json.dump(out, f, ensure_ascii=False, separators=(",", ":"))

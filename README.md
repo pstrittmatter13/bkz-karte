@@ -15,10 +15,10 @@ Netzbetreiber verlangen beim Anschluss an Hoch- oder Mittelspannung einen Baukos
 
 ## Grenzen
 
-- **Nur die größeren Netzbetreiber.** Durchsucht wurden die Netzbetreiber nach Größe bis 90 % der Erlösobergrenzen; die übrigen rund 680 meist kleinen Netzbetreiber (24,2 %) sind nicht erhoben. Keine Zufallsstichprobe.
+- **Nur die größeren Netzbetreiber.** Gesucht wurden die Preisblätter der Netzbetreiber nach Größe bis 90 % der Erlösobergrenzen (mit Nachsuche 241); die übrigen rund 570 meist kleinen Netzbetreiber nicht. Keine Zufallsstichprobe.
 - **Werte wie veröffentlicht:** netto, am Stichtag gültig, mit pauschalen Abschlägen; ohne Speicher- und Flexrabatte.
 - **Mediane je Netzbetreiber:** jeder Netzbetreiber zählt einmal – ein großer nicht mehr als ein kleiner.
-- **Grau heißt nicht „kein BKZ“:** dunkelgrau = gesucht, kein Wert veröffentlicht; hellgrau = nicht erhoben oder Netzbetreiber nicht eindeutig. Es wird nichts geschätzt.
+- **Grau heißt nicht „kein BKZ“:** dunkelgrau = gesucht, aber kein Wert, der zählt (Grund in der Tabelle); hellgrau = nicht gesucht oder Netzbetreiber unklar. Es wird nichts geschätzt.
 
 Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 
@@ -33,7 +33,7 @@ Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 
 **Karte bauen**
 
-6. **Netzbetreiber je Gemeinde:** aus dem Marktstammdatenregister (8,2 Mio. Anlagen in Betrieb) gezählt, an welchen Netzbetreiber die Anlagen einer Gemeinde auf welcher Spannungsebene angeschlossen sind; zuständig ist der mit den meisten Anschlüssen.
+6. **Netzbetreiber je Gemeinde:** aus dem Marktstammdatenregister (8,2 Mio. Anlagen in Betrieb) gezählt, an welchen Netzbetreiber die Anlagen einer Gemeinde auf welcher Spannungsebene angeschlossen sind; zuständig ist der mit den meisten Anschlüssen. Wo für das HS-Netz zu wenige Anlagen vorliegen, nennt [VNBdigital](https://www.vnbdigital.de) (Plattform der Verteilnetzbetreiber, § 14e EnWG) den Netzbetreiber mit Hochspannung; je Gemeinde mit Abrufdatum und Link in `zuordnung_vnbdigital.csv`.
 7. **Verknüpfen:** Netzbetreiber im Datensatz und im Register über die Registernummer; Gemeindegrenzen vom BKG.
 8. **Seite:** statisches HTML, vollständig aus den Skripten in `src/` erzeugt – derselbe Stand ergibt dieselbe Karte.
 
@@ -76,6 +76,7 @@ Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 | `data/` | Kartendaten: `karte.json`, Zählung aus dem Marktstammdatenregister, Gemeindegrenzen |
 | `src/` | Skripte, die `data/` erzeugen |
 | `zuordnung_hand.csv` | Ausnahmen beim Abgleich Datensatz ↔ Marktstammdatenregister |
+| `zuordnung_vnbdigital.csv` | HS-Betreiber laut VNBdigital für Gemeinden ohne MaStR-Zuordnung (Abrufdatum, Link je Gemeinde) |
 | `METHODIK.md` · `CITATION.cff` · `LICENSE` | Methodik · Zitierangaben · Lizenzen |
 
 ## Aktualisieren
@@ -114,5 +115,5 @@ Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 
 ---
 
-<sub>**Hinweis zu den Netzgebieten:** Netzgebietsgrenzen werden nicht amtlich veröffentlicht. Zuständig ist auf der Karte der Netzbetreiber, an den laut Marktstammdatenregister die meisten Anlagen der Gemeinde angeschlossen sind; Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden. Das HS-Netz wird nur bei klarer Mehrheit zugeordnet – in Gegenden, in denen kaum Anlagen direkt an der Hochspannung hängen (z. B. Raum Tuttlingen–Rottweil), bleibt es offen. Einzelheiten: [METHODIK.md](METHODIK.md).<br>
+<sub>**Hinweis zu den Netzgebieten:** Netzgebietsgrenzen werden nicht amtlich veröffentlicht. Zuständig ist auf der Karte der Netzbetreiber, an den laut Marktstammdatenregister die meisten Anlagen der Gemeinde angeschlossen sind; Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden. Das HS-Netz wird nur bei klarer Mehrheit zugeordnet – in Gegenden, in denen kaum Anlagen direkt an der Hochspannung hängen (z. B. Raum Tuttlingen–Rottweil), kommt der Betreiber aus VNBdigital (Stand: 130 Gemeinden, weitere folgen); nennt VNBdigital mehrere, bleibt es offen. Einzelheiten: [METHODIK.md](METHODIK.md).<br>
 Entstanden im Rahmen einer Bachelorarbeit an der HTWG Konstanz, mit Unterstützung des KI-Assistenten Claude (Anthropic) unter Anleitung und Verantwortung des Autors. Jeder Wert ist am Original geprüft (Stichprobe und zwei KI-Prüfungen ohne Wertfehler; Einzelheiten im Datensatz-README, Abschnitt 3.5). Fehler gefunden? → [Issue anlegen](https://github.com/pstrittmatter13/bkz-karte/issues)</sub>

@@ -157,18 +157,28 @@
     return `<div class="links"><a href="${esc(d.url)}" target="_blank" rel="noopener" title="Adresse beim Netzbetreiber, abgerufen 24.11.2026">Preisblatt beim Netzbetreiber ↗</a></div>`;
   }
 
-  function block(titel, z, ebenen, aktiv, belegeOben) {
+  function block(titel, z, ebenen, aktiv, belegeOben, ags) {
     const kopf = `<h3 class="${aktiv ? "netz-aktiv" : ""}">${titel}`;
+    const vd = ags && titel.startsWith("HS") ? (K.vnbdigital || {})[ags] : null;
+    const vdLink = vd ? `<a href="${esc(vd.url)}" target="_blank" rel="noopener">VNBdigital ↗</a> (Abruf ${datum(vd.abruf)})` : "";
+    if (!z && vd && vd.namen.length > 1) return `${kopf}</h3><p class="meta">Laut ${vdLink} betreiben hier mehrere Netzbetreiber ein Hochspannungsnetz: <b>${vd.namen.map(esc).join(", ")}</b>. Welcher zuständig ist, hängt vom Standort ab.</p>`;
     if (!z) return `${kopf}</h3><p class="meta">${titel.startsWith("MS")
       ? "Im Marktstammdatenregister ist in dieser Gemeinde keine Anlage registriert (meist gemeindefreies Gebiet)."
       : `Ein Hochspannungsnetz gibt es auch hier – auf der Karte fehlt nur sein Betreiber. Die Karte liest ihn aus dem Marktstammdatenregister ab: wer die Anlagen anschließt, die direkt an der Hochspannung hängen. Hier hängen zu wenige daran (in der Gemeinde keine, im Kreis weniger als 10 oder keine klare Mehrheit). Den zuständigen Netzbetreiber je Adresse nennt <a href="https://www.vnbdigital.de" target="_blank" rel="noopener">VNBdigital</a>.`}</p>`;
     const [nr, anteil, n, basis, kand] = z, v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
+    if (basis === "VNBdigital") {
+      const v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
+      return blockWerte(`${kopf}: ${esc(v.name)}</h3><p class="meta">Warum dieser Netzbetreiber: einziger Netzbetreiber mit Hochspannung in der Gemeinde laut ${vdLink} – im Marktstammdatenregister hängt hier keine Anlage direkt an der Hochspannung.</p>`, v, ebenen, belegeOben);
+    }
     const herkunft = basis === "NS" ? `${n} Anlagen an der Niederspannung (an Mittelspannung ist hier keine registriert)` :
       basis === "Kreis" ? `${n} Anlagen an HS oder HS/MS im Kreis (in der Gemeinde keine)` :
         `${n} Anlagen, die in der Gemeinde an ${titel.startsWith("MS") ? "MS oder MS/NS" : "HS oder HS/MS"} angeschlossen sind`;
     const andere = kand.slice(1).map(([k, c]) => `${esc(K.vnb[k]?.name || "MaStR " + k)} (${c})`).join(", ");
     let h = `${kopf}: ${esc(v.name)}</h3>
       <p class="meta">${v.ort ? "Sitz " + esc(v.ort) + " · " : ""}Marktstammdatenregister ${esc(nr)}<br>Warum dieser Netzbetreiber: ${pct(anteil)} von ${herkunft} (Anlagen = Erzeugung und Speicher)${andere ? "<br>auch angeschlossen bei: " + andere : ""}</p>`;
+    return blockWerte(h, v, ebenen, belegeOben);
+  }
+  function blockWerte(h, v, ebenen, belegeOben) {
     if (!v.docs.length) return h + `<p class="meta"><span class="chip">nicht gesucht</span> Gesucht wurden die Preisblätter der größeren Netzbetreiber; dieser gehört nicht dazu. Seinen BKZ nennt der Netzbetreiber selbst.</p>`;
     const zaehlt = [], nicht = [];
     for (const id of v.docs) {
@@ -177,7 +187,7 @@
         if (!ebenen.includes(x.ebene)) continue;
         const blatt = x.einheit !== "€/kW" ? `<br><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span>` : "";
         if (x.aus) zaehlt.push(`<tr><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b>${blatt}</td></tr>`);
-        else nicht.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}${blatt}</td><td>${esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
+        else nicht.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}${blatt}</td><td>${x.grund === "erst nach dem Stichtag gültig" && d.gueltig_ab ? `gilt erst ab ${datum(d.gueltig_ab)} (Stichtag der Karte: ${datum(K.datensatz.stichtag)})` : esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
       }
     }
     h += zaehlt.length ? `<table><tr><th>Ebene</th><th class="z">BKZ in €/kW netto</th></tr>${zaehlt.join("")}</table>`
@@ -188,13 +198,15 @@
     for (const id of v.docs) {
       const d = K.docs[id];
       if (!d.url && !d.werte.length) continue;
-      h += `<details><summary>${esc(d.titel || d.kategorie)}${d.jahr ? " (" + d.jahr + ")" : ""}</summary><div class="belege">
-        ${d.methode ? `Rechenweg laut Blatt: <b>${esc(METHODE[d.methode] || d.methode)}</b>${d.faktor != null && d.faktor !== 1 ? ", Faktor " + fmt(d.faktor, 2) : ""} <span class="hinweis">(${esc(d.methode_beleg)})</span><br>` : ""}
-        ${d.speicher && d.speicher !== "keine Angabe" ? `Speicher: ${esc(d.speicher)}${d.speicher_faktor != null ? " × " + fmt(d.speicher_faktor, 2) : ""}<br>` : ""}
-        Gültig ab ${datum(d.gueltig_ab) || "–"}${d.gueltig_bis ? " bis " + datum(d.gueltig_bis) : ""}${d.stand ? " · Stand " + esc(d.stand) : ""} · am Stichtag: ${esc(d.gilt_stichtag || "–")}<br>
-        ${d.fundort ? "Fundort: " + esc(d.fundort) + "<br>" : ""}
-        Datensatz-ID ${esc(d.id)}${d.pdf ? ` · gesicherte Datei ${esc(d.pdf)}` : ""}${d.sha256 ? `<br>SHA-256: <code>${esc(d.sha256)}</code>` : ""}
+      const rechenweg = d.methode && d.methode !== "nicht angegeben" ? `Rechenweg: ${esc(METHODE[d.methode] || d.methode)}${d.faktor != null && d.faktor !== 1 ? ", Faktor " + fmt(d.faktor, 2) : ""}<br>` : "";
+      const speicher = d.speicher && d.speicher !== "keine Angabe" ? `Für Speicher: ${esc(d.speicher)}${d.speicher_faktor != null ? " × " + fmt(d.speicher_faktor, 2) : ""}<br>` : "";
+      h += `<details><summary>Beleg: ${esc(d.titel || d.kategorie)}</summary><div class="belege">
+        Gültig ab ${datum(d.gueltig_ab) || "–"}${d.gueltig_bis ? " bis " + datum(d.gueltig_bis) : ""}<br>${rechenweg}${speicher}
         ${belegLinks(d)}
+        <details class="technik"><summary>Angaben zur Prüfung</summary>
+          ${d.fundort ? "Fundort: " + esc(d.fundort) + "<br>" : ""}${d.methode_beleg && d.methode_beleg !== "keine Angabe" ? "Rechenweg: " + esc(d.methode_beleg) + "<br>" : ""}${d.stand ? "Stand des Blatts: " + esc(d.stand) + "<br>" : ""}
+          Datensatz-ID ${esc(d.id)}${d.pdf ? ` · gesicherte Datei ${esc(d.pdf)}` : ""}${d.sha256 ? `<br>Prüfsumme (SHA-256): <code>${esc(d.sha256)}</code>` : ""}
+        </details>
       </div></details>`;
     }
     return h;
@@ -207,7 +219,7 @@
     const hsZuerst = gruppe(ebene) === "hs";
     const gleich = z.ms && z.hs && z.ms[0] === z.hs[0];
     const ms = b => block("MS-Netz", z.ms, ["MS", "MS/NS", "NS"], !hsZuerst, b);
-    const hs = b => block("HS-Netz", z.hs, ["HöS/HS", "HS", "HS/MS"], hsZuerst, b);
+    const hs = b => block("HS-Netz", z.hs, ["HöS/HS", "HS", "HS/MS"], hsZuerst, b, p.ags);
     document.getElementById("panel").innerHTML =
       `<button type="button" class="zurueck">← Zurück zur Karte</button><h2>${esc(p.name)}</h2><p class="meta">AGS ${esc(p.ags)} · ${p.ew.toLocaleString("de-DE")} Einwohner</p>` +
       (hsZuerst ? hs(false) + ms(gleich) : ms(false) + hs(gleich));
