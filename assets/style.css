@@ -124,7 +124,7 @@ details summary { cursor: pointer; color: var(--ink2); font-size: .84rem; font-w
 .tab-steuer { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-size: .85rem; color: var(--ink2); }
 .tab-scroll { overflow: auto; max-height: 560px; border: 1px solid var(--linie); border-radius: 10px; }
 #tabelle th {
-  position: sticky; top: 0; background: var(--fl2); text-align: left; padding: 8px 10px; cursor: pointer;
+  position: sticky; top: 0; background: var(--fl2); text-align: left; padding: 8px 10px;
   font-size: .74rem; font-weight: 600; color: var(--ink2); text-transform: uppercase; letter-spacing: .03em; white-space: nowrap;
   border-bottom: 1px solid var(--linie);
 }

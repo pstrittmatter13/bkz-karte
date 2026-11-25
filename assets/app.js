@@ -19,10 +19,41 @@
   const GRAU_KEIN = css.getPropertyValue("--kein-wert").trim();
   const GRAU_NICHT = css.getPropertyValue("--nicht-erhoben").trim();
   // verständliche Kurztexte für Status (je Netzbetreiber) und Ausschlussgründe (je Wert); sonst Text des Datensatzes
-  const STATUS = { "nicht im Datensatz": "nicht erhoben", "keine Angabe gefunden": "kein Wert gefunden", "Wert": "Wert veröffentlicht" };
-  const GRUND = { "NS (außerhalb des Geltungsbereichs; NS-BKZ nach NAV bzw. eigener NS-Regel)": "Niederspannung, nicht Teil der Karte",
+  // Begriffe: „gesucht“ = Preisblatt dieses Netzbetreibers wurde gesucht; „zählt“ = Wert geht in Farbe und Median ein.
+  const STATUS = {
+    "nicht im Datensatz": "nicht gesucht (kleinerer Netzbetreiber)",
+    "keine Angabe gefunden": "gesucht, keinen veröffentlichten Wert gefunden",
+    "nur Rechenregel, kein Wert": "gesucht, nur eine Rechenregel veröffentlicht, keine Zahl",
+    "Industrienetz, keine Angabe": "Industrienetz, kein Wert veröffentlicht",
+    "auf Anfrage / individuell": "gesucht, Wert nur auf Anfrage",
+    "Altfassung nur im Suchindex, nicht am Original geprüft": "nur eine alte Fassung gefunden, nicht am Original prüfbar",
+    "nicht prüfbar (nur Sekundärquelle)": "Wert nur in einer Drittquelle, nicht am Original prüfbar",
+    "nicht prüfbar (Original nicht abrufbar)": "Preisblatt nicht abrufbar",
+    "nicht prüfbar (Zugriff gesperrt)": "Seite gesperrt, nicht prüfbar",
+    "Wert nur im Vertrag": "Wert steht nur im Anschlussvertrag, nicht veröffentlicht",
+    "MS bei anderer Gesellschaft": "Mittelspannung betreibt eine andere Gesellschaft" };
+  const GRUND = {
+    "NS (außerhalb des Geltungsbereichs; NS-BKZ nach NAV bzw. eigener NS-Regel)": "Niederspannung, nicht Teil der Karte",
     "Sonderformel, nicht vergleichbar": "eigene Rechenformel, nicht vergleichbar",
-    "ÜNB (bundeseinheitlich)": "Übertragungsnetz, nicht Teil der Karte" };
+    "ÜNB (bundeseinheitlich)": "Übertragungsnetz, nicht Teil der Karte",
+    "erst nach dem Stichtag gültig": "gilt erst nach dem Stichtag",
+    "durch neueres Blatt ersetzt": "durch ein neueres Preisblatt ersetzt",
+    "Sekundärquelle": "nur aus einer Drittquelle, nicht am Original geprüft",
+    "Ebenenzuordnung unsicher": "Netzebene im Preisblatt nicht eindeutig",
+    "abgeleitet, kein BKZ-Preisblatt-Wert": "abgeleitet, kein Wert aus dem Preisblatt",
+    "nicht am Original geprüft (Original nicht abrufbar)": "Original nicht abrufbar",
+    "Wert des vorgelagerten ÜNB": "Wert des Übertragungsnetzbetreibers" };
+  const METHODE = { "5J-Mittel": "Leistungspreis, Mittel aus 5 Jahren", "Einzeljahr-LP": "Leistungspreis eines Jahres",
+    "LP-Mittel ohne Zeitraumangabe": "Leistungspreis, Mittel (Zeitraum nicht genannt)", "Festpreis/Pauschale": "Festpreis",
+    "Sonderformel": "eigene Formel", "nicht angegeben": "im Blatt nicht angegeben" };
+  // Kurzbeschreibung, warum ein gesuchter Netzbetreiber keinen Wert in der Karte hat
+  function ohneWertText(v) {
+    const w = v.docs.flatMap(id => K.docs[id].werte);
+    const oben = w.filter(x => x.ebene !== "NS");
+    if (oben.length) return "Wert veröffentlicht, zählt nicht: " + (GRUND[oben[0].grund] || oben[0].grund);
+    if (w.length) return "nur ein Niederspannungs-Wert veröffentlicht";
+    return STATUS[v.status] || v.status;
+  }
   const NAME_EBENE ={ HS: "Hochspannung", "HS/MS": "Umspannung HS/MS", MS: "Mittelspannung", "MS/NS": "Umspannung MS/NS" };
 
   const svg = d3.select("#karte"), W = 780, H = 1000;
@@ -56,7 +87,7 @@
       const r = wert(f.properties.ags, ebene);
       const nb = r.z ? (K.vnb[r.z[0]]?.name ?? r.z[0]) : "Netzbetreiber nicht eindeutig zuzuordnen";
       tip.innerHTML = `<b>${esc(f.properties.name)}</b>${esc(nb)}<br>${ebene}: ${r.art === "wert" ? fmt(r.w) + " €/kW" :
-        r.art === "kein" ? "kein Wert veröffentlicht" : r.z ? "nicht erhoben" : "–"}`;
+        r.art === "kein" ? "gesucht, kein Wert, der zählt" : r.z ? "nicht gesucht" : "–"}`;
       const b = svg.node().parentNode.getBoundingClientRect();
       tip.style.left = Math.min(ev.clientX - b.left + 14, b.width - 260) + "px";
       tip.style.top = (ev.clientY - b.top + 14) + "px"; tip.hidden = false;
@@ -86,7 +117,7 @@
     const kz = (wert, text) => `<div class="kz"><b>${wert}</b><span>${text}</span></div>`;
     document.getElementById("kennzahlen").innerHTML =
       kz(D.vnb_mit_wert, `Netzbetreiber mit veröffentlichtem Wert (${D.werte_in_auswertung} Werte)`) +
-      kz(fmt(D.eog_anteil_prozent, 1) + " %", `Anteil dieser VNB an den Erlösobergrenzen 2026 aller ${D.vnb_gesamt_eog_liste} VNB`) +
+      kz(fmt(D.eog_anteil_prozent, 1) + " %", `Anteil dieser Netzbetreiber an den Erlösobergrenzen 2026 aller ${D.vnb_gesamt_eog_liste} Netzbetreiber (Maß für die Größe)`) +
       kz(pct(A.ew_mit_wert_anteil), `der Einwohner wohnen in einer Gemeinde, für die ein ${ebene}-Wert vorliegt (${A.gem_mit_wert.toLocaleString("de-DE")} Gemeinden)`) +
       kz(A.vnb_mit_wert, `Netzbetreiber mit Wert auf der Ebene ${ebene}`);
     document.getElementById("g-vnb").textContent = D.vnb_mit_wert;
@@ -99,8 +130,8 @@
     document.getElementById("legende").innerHTML =
       `<div class="skala-wrap"><div class="skala">${balken}</div><div class="skala-ticks">${ticks}</div></div>
        <div class="graus">
-         <span class="chip-grau"><i style="background:${GRAU_KEIN}"></i>gesucht, kein Wert veröffentlicht</span>
-         <span class="chip-grau"><i style="background:${GRAU_NICHT}"></i>nicht erhoben / Netzbetreiber nicht eindeutig</span>
+         <span class="chip-grau"><i style="background:${GRAU_KEIN}"></i>gesucht, aber kein Wert, der zählt</span>
+         <span class="chip-grau"><i style="background:${GRAU_NICHT}"></i>nicht gesucht oder Netzbetreiber unklar</span>
        </div>`;
   }
 
@@ -115,7 +146,7 @@
     const alle = Object.values(reg).flat();
     const kacheln = ["Nord", "Ost", "West", "Süd", "bundesweit"].filter(r => reg[r] || r === "bundesweit").map(r => {
       const a = r === "bundesweit" ? alle : reg[r];
-      return `<div class="reg${r === "bundesweit" ? " reg-alle" : ""}"><span>${r}</span><b>${fmt(d3.median(a), 1)}</b><small>€/kW · ${a.length} VNB</small></div>`;
+      return `<div class="reg${r === "bundesweit" ? " reg-alle" : ""}"><span>${r}</span><b>${fmt(d3.median(a), 1)}</b><small>€/kW · ${a.length} Netzbetreiber</small></div>`;
     });
     document.getElementById("regionen-titel").textContent = `Median je Region – ${NAME_EBENE[ebene]} (${ebene})`;
     document.getElementById("regionen").innerHTML = kacheln.join("");
@@ -129,37 +160,36 @@
   function block(titel, z, ebenen, aktiv, belegeOben) {
     const kopf = `<h3 class="${aktiv ? "netz-aktiv" : ""}">${titel}`;
     if (!z) return `${kopf}</h3><p class="meta">${titel.startsWith("MS")
-      ? "Im MaStR ist in dieser Gemeinde kein Anschluss registriert (meist gemeindefreies Gebiet)."
+      ? "Im Marktstammdatenregister ist in dieser Gemeinde keine Anlage registriert (meist gemeindefreies Gebiet)."
       : `Ein Hochspannungsnetz gibt es auch hier – auf der Karte fehlt nur sein Betreiber. Die Karte liest ihn aus dem Marktstammdatenregister ab: wer die Anlagen anschließt, die direkt an der Hochspannung hängen. Hier hängen zu wenige daran (in der Gemeinde keine, im Kreis weniger als 10 oder keine klare Mehrheit). Den zuständigen Netzbetreiber je Adresse nennt <a href="https://www.vnbdigital.de" target="_blank" rel="noopener">VNBdigital</a>.`}</p>`;
     const [nr, anteil, n, basis, kand] = z, v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
-    const herkunft = basis === "NS" ? `abgeleitet aus ${n} NS-Anschlüssen (kein MS-Anschluss registriert)` :
-      basis === "Kreis" ? `${n} HS- und HS/MS-Anschlüssen im Kreis (keiner in der Gemeinde)` :
-        `${n} Anschlüssen auf ${titel.startsWith("MS") ? "MS und MS/NS" : "HS und HS/MS"} in der Gemeinde`;
+    const herkunft = basis === "NS" ? `${n} Anlagen an der Niederspannung (an Mittelspannung ist hier keine registriert)` :
+      basis === "Kreis" ? `${n} Anlagen an HS oder HS/MS im Kreis (in der Gemeinde keine)` :
+        `${n} Anlagen, die in der Gemeinde an ${titel.startsWith("MS") ? "MS oder MS/NS" : "HS oder HS/MS"} angeschlossen sind`;
     const andere = kand.slice(1).map(([k, c]) => `${esc(K.vnb[k]?.name || "MaStR " + k)} (${c})`).join(", ");
     let h = `${kopf}: ${esc(v.name)}</h3>
-      <p class="meta">MaStR ${esc(nr)}${v.ort ? " · " + esc(v.ort) : ""}<br>Zuordnung: ${pct(anteil)} von ${herkunft}${andere ? "<br>weitere: " + andere : ""}</p>`;
-    if (!v.docs.length) return h + `<p class="meta"><span class="chip">${esc(STATUS[v.status] || v.status)}</span> ${v.status === "nicht im Datensatz"
-      ? "Dieser Netzbetreiber gehört nicht zu den erhobenen (größeren) Netzbetreibern."
-      : "Gesucht, aber kein veröffentlichter Wert gefunden."}</p>`;
-    const zeilen = [];
+      <p class="meta">${v.ort ? "Sitz " + esc(v.ort) + " · " : ""}Marktstammdatenregister ${esc(nr)}<br>Warum dieser Netzbetreiber: ${pct(anteil)} von ${herkunft} (Anlagen = Erzeugung und Speicher)${andere ? "<br>auch angeschlossen bei: " + andere : ""}</p>`;
+    if (!v.docs.length) return h + `<p class="meta"><span class="chip">nicht gesucht</span> Gesucht wurden die Preisblätter der größeren Netzbetreiber; dieser gehört nicht dazu. Seinen BKZ nennt der Netzbetreiber selbst.</p>`;
+    const zaehlt = [], nicht = [];
     for (const id of v.docs) {
       const d = K.docs[id];
       for (const x of d.werte) {
         if (!ebenen.includes(x.ebene)) continue;
         const blatt = x.einheit !== "€/kW" ? `<br><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span>` : "";
-        zeilen.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${x.aus ? "<b>" + fmt(x.eur_kw) + "</b>" : fmt(x.eur_kw)}${blatt}</td>
-          <td>${x.aus ? "ja" : "nein – " + esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
+        if (x.aus) zaehlt.push(`<tr><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b>${blatt}</td></tr>`);
+        else nicht.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}${blatt}</td><td>${esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
       }
     }
-    h += zeilen.length ? `<table><tr><th>Ebene</th><th class="z">€/kW netto</th><th>zählt in Karte?</th></tr>${zeilen.join("")}</table>
-      <p class="hinweis">ja = geht in Farbe und Median ein · nein = steht im Blatt, zählt aber nicht (Grund daneben)</p>`
-      : `<p class="meta"><span class="chip">${esc(STATUS[v.status] || v.status)}</span> kein Wert auf diesen Ebenen.</p>`;
+    h += zaehlt.length ? `<table><tr><th>Ebene</th><th class="z">BKZ in €/kW netto</th></tr>${zaehlt.join("")}</table>`
+      : `<p class="meta"><span class="chip">kein Wert, der zählt</span> Grund: ${esc(ohneWertText(v))}</p>`;
+    if (nicht.length) h += `<details><summary>Weitere Werte im Preisblatt, die nicht zählen (${nicht.length})</summary>
+      <table><tr><th>Ebene</th><th class="z">€/kW</th><th>warum nicht</th></tr>${nicht.join("")}</table></details>`;
     if (belegeOben) return h + `<p class="meta">Belege: siehe oben (derselbe Netzbetreiber).</p>`;
     for (const id of v.docs) {
       const d = K.docs[id];
       if (!d.url && !d.werte.length) continue;
       h += `<details><summary>${esc(d.titel || d.kategorie)}${d.jahr ? " (" + d.jahr + ")" : ""}</summary><div class="belege">
-        ${d.methode ? `Methode: <b>${esc(d.methode)}</b>${d.faktor != null && d.faktor !== 1 ? ", Faktor " + fmt(d.faktor, 2) : ""} <span class="hinweis">(${esc(d.methode_beleg)})</span><br>` : ""}
+        ${d.methode ? `Rechenweg laut Blatt: <b>${esc(METHODE[d.methode] || d.methode)}</b>${d.faktor != null && d.faktor !== 1 ? ", Faktor " + fmt(d.faktor, 2) : ""} <span class="hinweis">(${esc(d.methode_beleg)})</span><br>` : ""}
         ${d.speicher && d.speicher !== "keine Angabe" ? `Speicher: ${esc(d.speicher)}${d.speicher_faktor != null ? " × " + fmt(d.speicher_faktor, 2) : ""}<br>` : ""}
         Gültig ab ${datum(d.gueltig_ab) || "–"}${d.gueltig_bis ? " bis " + datum(d.gueltig_bis) : ""}${d.stand ? " · Stand " + esc(d.stand) : ""} · am Stichtag: ${esc(d.gilt_stichtag || "–")}<br>
         ${d.fundort ? "Fundort: " + esc(d.fundort) + "<br>" : ""}
@@ -255,36 +285,33 @@
   });
   knoepfe.forEach(b => b.setAttribute("aria-checked", String(b.dataset.e === ebene)));
 
-  // Tabelle aller erhobenen VNB (mit und ohne Wert), Standard: nach Größe (Erlösobergrenze 2026)
-  const zeilen = Object.entries(K.vnb).filter(([, v]) => v.docs.length).map(([nr, v]) => {
+  // Tabelle: mit Wert (Standard), gesucht ohne Wert, nicht gesucht, Standard: nach Größe (Erlösobergrenze 2026)
+  const zeilen = Object.entries(K.vnb).map(([nr, v]) => {
+    if (!v.docs.length) return { nr, name: v.name, region: "", land: v.ort ? "Sitz " + v.ort : "", methode: null, url: null,
+      mitWert: false, gesucht: false, status: "nicht gesucht", groesse: v.eog_mio ?? null };
     const mitWert = Object.keys(v.kenn).length > 0;
     const d0 = K.docs[mitWert ? Object.values(v.kenn)[0].id : v.docs[0]];
     const art = /\.pdf$/i.test(d0.pdf || "") ? "PDF" : "Webseite";
     return { nr, name: v.name, region: d0.region, land: d0.land, methode: mitWert ? d0.methode : null,
-      url: mitWert ? d0.url : null, art, mitWert, status: STATUS[v.status] || v.status, groesse: v.eog_mio ?? null,
+      url: mitWert ? d0.url : null, art, mitWert, gesucht: true, status: mitWert ? "" : ohneWertText(v), groesse: v.eog_mio ?? null,
       HS: v.kenn.HS?.w, "HS/MS": v.kenn["HS/MS"]?.w, MS: v.kenn.MS?.w, "MS/NS": v.kenn["MS/NS"]?.w };
   });
   let sortK = "groesse", sortAuf = false;
   const auswahlSort = document.getElementById("sort-vnb"), auswahlZeige = document.getElementById("zeige-vnb");
   function tabelle() {
     const q = document.getElementById("suche-vnb").value.toLowerCase(), zeige = auswahlZeige.value;
-    const r = zeilen.filter(z => (zeige === "alle" || (zeige === "mit") === z.mitWert) &&
+    const r = zeilen.filter(z => (zeige === "mit" ? z.mitWert : zeige === "ohne" ? z.gesucht && !z.mitWert : zeige === "nicht" ? !z.gesucht : z.gesucht) &&
         (!q || z.name.toLowerCase().includes(q) || (z.land || "").toLowerCase().includes(q)))
       .sort((a, b) => { const x = a[sortK], y = b[sortK]; const c = x == null ? 1 : y == null ? -1 : typeof x === "number" ? x - y : String(x).localeCompare(y, "de"); return x == null || y == null ? c : sortAuf ? c : -c; });
     document.querySelector("#tabelle tbody").innerHTML = r.map(z => `<tr class="${z.mitWert ? "" : "ohne"}"><td>${esc(z.name)}${z.mitWert ? "" : `<br><span class="hinweis">${esc(z.status)}</span>`}</td>
       <td>${esc(z.region)}</td><td>${esc(z.land)}</td>
-      ${["HS", "HS/MS", "MS", "MS/NS"].map(e => `<td class="z">${fmt(z[e])}</td>`).join("")}<td>${z.methode ? esc(z.methode) : "–"}</td>
+      ${["HS", "HS/MS", "MS", "MS/NS"].map(e => `<td class="z">${fmt(z[e])}</td>`).join("")}<td>${z.methode ? esc(METHODE[z.methode] || z.methode) : "–"}</td>
       <td class="nowrap">${z.url ? `<a href="${esc(z.url)}" target="_blank" rel="noopener" title="Adresse beim Netzbetreiber, abgerufen 24.11.2026">${z.art} ↗</a>` : "–"}</td></tr>`).join("");
-    document.getElementById("tab-anzahl").textContent = `${r.length} von ${zeilen.length}`;
-    auswahlSort.value = sortK === "name" ? "name" : sortK === "groesse" ? "groesse" : "";
+    document.getElementById("tab-anzahl").textContent = `${r.length} Netzbetreiber`;
   }
   document.getElementById("suche-vnb").addEventListener("input", tabelle);
   auswahlZeige.addEventListener("change", tabelle);
   auswahlSort.addEventListener("change", () => { sortK = auswahlSort.value || "groesse"; sortAuf = sortK === "name"; tabelle(); });
-  document.querySelectorAll("#tabelle th[data-k]").forEach(th => th.addEventListener("click", () => {
-    sortAuf = sortK === th.dataset.k ? !sortAuf : true; sortK = th.dataset.k; tabelle();
-  }));
-
   // Zitat kopieren
   document.getElementById("zitat-kopieren").addEventListener("click", async ev => {
     try { await navigator.clipboard.writeText(document.getElementById("zitat").textContent.trim()); ev.target.textContent = "Kopiert ✓"; }
@@ -295,7 +322,7 @@
   const m = K.mastr;
   document.getElementById("quellenzeile").textContent =
     `Datenstand: BKZ-Datensatz, Stichtag ${datum(K.datensatz.stichtag)} (${K.datensatz.werte_in_auswertung} Werte) · ` +
-    `MaStR-Export ${m.datei} (SHA-256 ${String(m.sha256).slice(0, 16)}…, ${m.gezaehlt?.toLocaleString("de-DE")} Anlagen in Betrieb) · Karte erzeugt am ${datum(K.erzeugt)}.`;
+    `Marktstammdatenregister, Export ${m.datei} (SHA-256 ${String(m.sha256).slice(0, 16)}…, ${m.gezaehlt?.toLocaleString("de-DE")} Anlagen in Betrieb) · Karte erzeugt am ${datum(K.erzeugt)}.`;
 
   faerben(); tabelle();
 })();

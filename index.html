@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=2.1">
+<link rel="stylesheet" href="assets/style.css?v=2.3">
 </head>
 <body>
 <header class="kopf">
@@ -55,7 +55,7 @@
       <svg id="karte" role="img" aria-label="Karte der Gemeinden, eingefärbt nach Baukostenzuschuss"></svg>
       <button type="button" id="zuruecksetzen" class="knopf-karte" hidden>Ganz Deutschland</button>
       <div id="tooltip" class="tooltip" hidden></div>
-      <p class="hinweis">Mausrad oder Ziehen: zoomen und verschieben · Klick auf eine Gemeinde: Netzbetreiber, Werte und Beleg</p>
+      <p class="hinweis">Mausrad oder Ziehen: zoomen und verschieben · Klick auf eine Gemeinde: Netzbetreiber, Werte und Beleg<br>HS = Hochspannung · MS = Mittelspannung · HS/MS und MS/NS = Umspannung zwischen zwei Ebenen (Anschluss am Umspannwerk bzw. an der Ortsnetzstation)</p>
     </section>
     <aside id="panel" class="panel" aria-live="polite">
       <h2>Gemeinde wählen</h2>
@@ -65,37 +65,38 @@
 
   <section class="kasten">
     <div class="kasten-kopf">
-      <h2>Alle erhobenen Netzbetreiber</h2>
+      <h2>Netzbetreiber</h2>
       <div class="tab-steuer">
         <input id="suche-vnb" type="search" placeholder="Netzbetreiber oder Land filtern" autocomplete="off">
-        <select id="zeige-vnb" aria-label="Anzeigen"><option value="alle">alle</option><option value="mit">mit Wert</option><option value="ohne">ohne Wert</option></select>
-        <select id="sort-vnb" aria-label="Sortieren"><option value="groesse">nach Größe</option><option value="name">nach Name</option><option value="" hidden>nach Spalte</option></select>
+        <select id="zeige-vnb" aria-label="Anzeigen"><option value="mit">mit Wert</option><option value="ohne">gesucht, ohne Wert – mit Grund</option><option value="nicht">nicht gesucht</option><option value="alle">alle gesuchten</option></select>
+        <select id="sort-vnb" aria-label="Sortieren"><option value="groesse">nach Größe</option><option value="name">nach Name</option></select>
         <span id="tab-anzahl"></span>
         <a class="knopf" href="datensatz/bkz_werte_lang.csv" download>Werte als CSV</a>
       </div>
     </div>
+    <p class="meta tab-erkl">Gesucht wurden die Preisblätter der größeren Netzbetreiber. Angezeigt sind zuerst die mit Wert; über die Auswahl auch die, bei denen nichts Verwertbares gefunden wurde (mit Grund), und die nicht gesuchten – dort kann ein Preisblatt nachgetragen werden.</p>
     <div class="tab-scroll">
       <table id="tabelle">
         <thead><tr>
-          <th data-k="name">Netzbetreiber</th><th data-k="region">Region</th><th data-k="land">Land</th>
-          <th data-k="HS" class="z">HS</th><th data-k="HS/MS" class="z">HS/MS</th><th data-k="MS" class="z">MS</th><th data-k="MS/NS" class="z">MS/NS</th>
-          <th data-k="methode">Methode</th><th>Original</th>
+          <th>Netzbetreiber</th><th>Region</th><th>Land</th>
+          <th class="z">HS</th><th class="z">HS/MS</th><th class="z">MS</th><th class="z">MS/NS</th>
+          <th>Rechenweg</th><th>Original</th>
         </tr></thead>
         <tbody></tbody>
       </table>
     </div>
-    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. Größe = Erlösobergrenze 2026 (BNetzA). „PDF“ führt zum Preisblatt beim Netzbetreiber, „Webseite“ zur Seite, auf der der Netzbetreiber die BKZ-Tabelle direkt veröffentlicht (kein PDF); Adressen abgerufen 24.11.2026. – = kein Wert.</p>
+    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. Größe = Erlösobergrenze 2026 (Bundesnetzagentur): wie viel der Netzbetreiber im Jahr über Netzentgelte einnehmen darf. Rechenweg: die meisten Netzbetreiber leiten den BKZ aus dem Leistungspreis ihres Netzentgelts ab (Leistungspreismodell). „PDF“ führt zum Preisblatt beim Netzbetreiber, „Webseite“ zur Seite, auf der der Netzbetreiber die BKZ-Tabelle direkt veröffentlicht (kein PDF); Adressen abgerufen 24.11.2026. – = kein Wert.</p>
   </section>
 
   <section class="kasten">
     <h2>Abdeckung und Grenzen</h2>
     <p class="meta">Was die Karte zeigt – und was nicht.</p>
     <div class="kacheln">
-      <div class="kachel"><h3>Größere Netzbetreiber</h3><p>Erhoben nach Größe, keine Zufallsstichprobe. Die <b id="g-vnb">124</b> VNB mit Wert stehen für <b><span id="g-eog">75,8</span> %</b> der Erlösobergrenzen 2026. Kleine VNB veröffentlichen selten einen Wert.</p></div>
-      <div class="kachel"><h3>Grau ≠ kein BKZ</h3><p><b>Dunkelgrau:</b> gesucht, kein Wert veröffentlicht (Rechenregel, „auf Anfrage“). <b>Hellgrau:</b> nicht erhoben oder Netzbetreiber nicht eindeutig.</p></div>
+      <div class="kachel"><h3>Nur größere Netzbetreiber gesucht</h3><p>Gesucht wurde nach Größe, keine Zufallsstichprobe. Die <b id="g-vnb">124</b> Netzbetreiber mit Wert stehen für <b><span id="g-eog">75,8</span> %</b> der Erlösobergrenzen 2026. Kleine Netzbetreiber veröffentlichen selten einen Wert.</p></div>
+      <div class="kachel"><h3>Grau ≠ kein BKZ</h3><p><b>Dunkelgrau:</b> gesucht, aber kein Wert, der zählt (z. B. nur „auf Anfrage“, eigene Formel). <b>Hellgrau:</b> nicht gesucht oder Netzbetreiber unklar.</p></div>
       <div class="kachel"><h3>Netzgebiete genähert</h3><p>Aus dem Marktstammdatenregister: zuständig ist, wer die meisten Anlagen der Gemeinde anschließt. HS-Netz nur bei klarer Mehrheit.</p></div>
       <div class="kachel"><h3>Werte wie veröffentlicht</h3><p>Netto, am Stichtag gültig, mit pauschalen Abschlägen. <b>Ohne</b> Speicher- und Flexrabatte.</p></div>
-      <div class="kachel"><h3>Mediane je VNB</h3><p>Jeder Netzbetreiber zählt einmal – unabhängig von Größe, Fläche oder Anschlüssen.</p></div>
+      <div class="kachel"><h3>Median: jeder Netzbetreiber einmal</h3><p>Jeder Netzbetreiber zählt einmal – unabhängig von Größe, Fläche oder Anschlüssen.</p></div>
       <div class="kachel"><h3>Geprüft</h3><p>Jeder Wert am Original nachgelesen; Stichprobe und zwei KI-Prüfungen, 0 Wertfehler. Prüfung durch eine weitere Person steht aus.</p></div>
     </div>
     <p class="meta mehr">Ausführlich: <a href="https://github.com/pstrittmatter13/bkz-karte/blob/main/METHODIK.md">Methodik der Karte</a> · <a href="https://github.com/pstrittmatter13/bkz-karte/blob/main/datensatz/README.md">Datensatz: Regeln, Prüfung, Grenzen</a></p>
@@ -135,6 +136,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=2.2"></script>
+<script src="assets/app.js?v=2.4"></script>
 </body>
 </html>
