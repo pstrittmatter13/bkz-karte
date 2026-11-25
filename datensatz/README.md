@@ -1,8 +1,8 @@
 # BKZ-Datensatz Deutschland 2026 (Strom, oberhalb Niederspannung)
 
-Stichtag: **24.11.2026** · Bearbeitung: Paul Schneider-Strittmatter (HTWG Konstanz), Erhebung mit KI-Unterstützung (Abschnitt 7) · Fassung nach zweiter Prüfung und Nachsuche vom 24.11.2026.
+Stichtag: **24.11.2026** · Bearbeitung: Paul Schneider-Strittmatter (HTWG Konstanz), Erhebung mit KI-Unterstützung (Abschnitt 7) · Fassung nach zweiter Prüfung und Nachsuche vom 24.11.2026, TEN aufgenommen am 25.11.2026.
 
-**English summary.** Published grid-connection capacity charges (Baukostenzuschuss, BKZ) of German electricity distribution system operators above low voltage, valid on 24 Nov 2026: 329 values from 124 operators (75.8 % of the 2026 revenue caps of all 808 DSOs), each checked against the original price sheet, with coding of the calculation method, operator discounts and storage rules. Main result (median, €/kW): HV 110.0 · HV/MV 113.0 · MV 125.5 · MV/LV 122.0. Scripts reproduce all figures (`auswertung.py`) and check consistency (`pruefung.py`).
+**English summary.** Published grid-connection capacity charges (Baukostenzuschuss, BKZ) of German electricity distribution system operators above low voltage, valid on 24 Nov 2026: 332 values from 125 operators (77.3 % of the 2026 revenue caps of all 808 DSOs), each checked against the original price sheet, with coding of the calculation method, operator discounts and storage rules. Main result (median, €/kW): HV 109.8 · HV/MV 111.7 · MV 125.4 · MV/LV 122.0. Scripts reproduce all figures (`auswertung.py`) and check consistency (`pruefung.py`).
 
 ## 1 Worum es geht
 
@@ -14,21 +14,21 @@ Der Datensatz sammelt die **veröffentlichten BKZ-Preisblätter**, die am Sticht
 
 | Netzebene | n | P10 | Median | P90 |
 |---|---|---|---|---|
-| HS | 46 | 52,0 | 110,0 | 161,5 |
-| HS/MS | 68 | 58,3 | 113,0 | 153,4 |
-| MS | 121 | 66,6 | 125,5 | 166,8 |
+| HS | 47 | 51,7 | 109,8 | 161,2 |
+| HS/MS | 69 | 54,4 | 111,7 | 153,4 |
+| MS | 122 | 66,1 | 125,4 | 166,7 |
 | MS/NS | 90 | 50,0 | 122,0 | 177,5 |
 | HöS/HS | 4 | – | 103,8 | – |
 
-329 Werte von 124 VNB, alle am Original geprüft. MS nach Region (Median, n): Nord 117,1 (14) · Ost 108,0 (15) · West 129,5 (54) · Süd 126,9 (38); beschreibend, ohne Test.
+332 Werte von 125 VNB, alle am Original geprüft. MS nach Region (Median, n): Nord 117,1 (14) · Ost 107,2 (16) · West 129,5 (54) · Süd 126,9 (38); beschreibend, ohne Test.
 
 **Sensitivität** (Median €/kW): zeigt, wie stark Regelentscheidungen das Ergebnis verschieben.
 
 | Netzebene | Hauptergebnis | nur Blätter mit ausdrücklicher Gültigkeit 2026 | nur Werte ohne Abschlag (Faktor 1) | nur Blätter in €/kW |
 |---|---|---|---|---|
-| HS | 110,0 (46) | 110,2 (43) | 115,3 (42) | 110,0 (40) |
-| HS/MS | 113,0 (68) | 116,6 (63) | 116,6 (61) | 113,0 (58) |
-| MS | 125,5 (121) | 130,5 (105) | 126,1 (113) | 126,1 (107) |
+| HS | 109,8 (47) | 110,0 (44) | 112,7 (43) | 109,8 (41) |
+| HS/MS | 111,7 (69) | 115,7 (64) | 115,7 (62) | 111,7 (59) |
+| MS | 125,4 (122) | 129,5 (106) | 126,0 (114) | 126,0 (108) |
 | MS/NS | 122,0 (90) | 132,0 (82) | 126,9 (82) | 126,0 (76) |
 
 ## 2 Dateien (Veröffentlichungspaket)
@@ -57,19 +57,19 @@ Nicht im Paket: die Originaldokumente (Urheberrecht der Netzbetreiber; nachprüf
 ### 3.1 Grundgesamtheit, Geltungsbereich, Abdeckung
 Grundgesamtheit sind die aktiven öffentlichen Stromnetzbetreiber laut MaStR (828). Durchsucht wurden die VNB nach absteigender Erlösobergrenze 2026 bis 90 % der kumulierten EOG aller VNB (234 VNB), dazu VNB, die aus früheren Arbeitsständen schon erfasst waren. Begründung: Die EOG ist ein frei verfügbares Größenmaß; kleine VNB veröffentlichen nach der Erfahrung der Suche selten ein BKZ-Preisblatt oberhalb NS. Eine Zufallsstichprobe kleiner VNB wurde nicht gezogen. Der Datensatz ist daher **keine repräsentative Stichprobe aller VNB**.
 
-**Abdeckung:** Die 124 VNB der Auswertung stehen für **75,8 % der Erlösobergrenzen 2026** aller 808 VNB der BNetzA-Liste; 115 davon gehören zu den 234 VNB bis 90 % EOG, 9 wurden zusätzlich erfasst. Die übrigen durchsuchten VNB haben keinen prüfbaren Wert oberhalb NS veröffentlicht (Kategorien 4.3) – das misst auch, wer transparent ist. Zuordnung über Namensabgleich, fünf Umfirmierungen bzw. Schreibweisen von Hand (`eog_zuordnung.csv`, Spalte `zuordnung`; Hamburger Energienetze ↔ Stromnetz Hamburg und RheinNetz ↔ Rheinische NETZGesellschaft als Umfirmierung angenommen). Die EOG misst die Größe über alle Netzebenen, nicht die Zahl der MS-Anschlüsse.
+**Abdeckung:** Die 125 VNB der Auswertung stehen für **77,3 % der Erlösobergrenzen 2026** aller 808 VNB der BNetzA-Liste; 116 davon gehören zu den 234 VNB bis 90 % EOG, 9 wurden zusätzlich erfasst. Die übrigen durchsuchten VNB haben keinen prüfbaren Wert oberhalb NS veröffentlicht (Kategorien 4.3) – das misst auch, wer transparent ist. Zuordnung über Namensabgleich, fünf Umfirmierungen bzw. Schreibweisen von Hand (`eog_zuordnung.csv`, Spalte `zuordnung`; Hamburger Energienetze ↔ Stromnetz Hamburg und RheinNetz ↔ Rheinische NETZGesellschaft als Umfirmierung angenommen). Die EOG misst die Größe über alle Netzebenen, nicht die Zahl der MS-Anschlüsse.
 
 ### 3.2 Suche
 1. Erster Durchgang: Website des Netzbetreibers (Netzanschluss, Preise, Downloads) und Websuche nach Preisblatt und Dateinamen; ergebnisbezogen in `bkz_quellen.csv` (`fundort`, `anmerkung`) dokumentiert, nicht als eigenes Protokoll.
 2. Zweiter Durchgang (24.11.2026) für alle VNB ohne Wert: Websuche „Baukostenzuschuss Mittelspannung 2026“ mit Domainfilter auf die Website des Netzbetreibers; jeder Treffer am Original geprüft (`suchprotokoll_2026-11-24.jsonl`).
 3. Server, die automatische Abrufe sperren (HTTP 403, JavaScript), wurden im Browser von Hand geladen. Webseiten als Original sind als HTML gesichert; lädt eine Seite ihren Inhalt per JavaScript, als Textauszug des angezeigten Inhalts mit Abrufzeit (N-ERGIE).
-4. Nachsuche (24.11.2026) nach der zweiten Prüfung (3.5): der Autor hat die größten VNB ohne Wert nach EOG im Browser durchsucht. Neu: Avacon, N-ERGIE, Stadtwerke Tuttlingen; bei TEN, SWM, MVV und Ulm Netze bestätigt, dass oberhalb NS kein Wert (bzw. nur eine Sonderformel) veröffentlicht ist.
+4. Nachsuche (24.11.2026) nach der zweiten Prüfung (3.5): der Autor hat die größten VNB ohne Wert nach EOG im Browser durchsucht. Neu: Avacon, N-ERGIE, Stadtwerke Tuttlingen; bei SWM, MVV und Ulm Netze bestätigt, dass oberhalb NS kein Wert veröffentlicht ist. TEN (bisher als „Sonderformel“ ausgeschlossen) zählt seit 25.11.2026: Das Merkblatt nennt S. 2 die Werte ausdrücklich als „Baukostenzuschuss in € pro kW (netto)“; die Formel auf S. 1 (Faktor × Leistungspreis) ergibt mit dem Leistungspreis 2026 nicht diese Werte, maßgeblich ist der veröffentlichte Wert. Die Werte (HS 10,26 · HS/MS 11,63 · MS 11,94 €/kW) sind auffällig niedrig.
 
 „Keine Angabe gefunden“ heißt: nach den Suchdurchgängen nicht gefunden – nicht „nicht veröffentlicht“.
 
 ### 3.3 Erfassung
 - Werte **netto** in der Einheit des Dokuments (`bkz_netto`, `einheit`); Netzebene vereinheitlicht (`netzebene`), Originalbezeichnung in `netzebene_original`.
-- `wert_eur_kw`: €/kVA mit dem Faktor laut Dokument umgerechnet (0,9 bei 6 Werten; „kW = kVA“ laut Dokument bei 9); ohne Angabe Annahme 1,0 (cos φ = 1; 30 Werte, davon 4 bei NRM, deren Faktor 0,9 im Blatt nur für NS gilt). 284 Werte stehen schon in €/kW.
+- `wert_eur_kw`: €/kVA mit dem Faktor laut Dokument umgerechnet (0,9 bei 6 Werten; „kW = kVA“ laut Dokument bei 9); ohne Angabe Annahme 1,0 (cos φ = 1; 30 Werte, davon 4 bei NRM, deren Faktor 0,9 im Blatt nur für NS gilt). 287 Werte stehen schon in €/kW.
 - Methode je Dokument aus dem Originaltext: `methode_kat`, `methode_beleg`, `faktor_num` (pauschaler Abschlag des Netzbetreibers; 1,0 = kein Abschlag genannt), Sonderregeln für Speicher (`speicher_sonderregel`, `speicher_faktor`) und Flexibilität (`flex_regel`). Gelten Faktoren je Ebene verschieden (z. B. 0,5 für NS-Anschlüsse an der Umspannung MS/NS), stehen sie in der Wertzeile.
 - **Pauschale Abschläge** (Faktor < 1, 27 Werte von 10 Dokumenten) sind in den Werten **enthalten** – die Werte sind die veröffentlichten Preise, die ein Anschlussnehmer zahlt. **Speicher- und Flexrabatte sind nicht enthalten.**
 
@@ -87,7 +87,7 @@ Ein Wert zählt (`in_auswertung = ja`), wenn
 | erst nach dem Stichtag gültig (Blätter 2027) | 14 |
 | ÜNB bzw. Wert des vorgelagerten ÜNB | 7 |
 | durch neueres Blatt ersetzt | 5 |
-| Sekundärquelle · Sonderformel · Ebenenzuordnung unsicher | je 3 |
+| Sekundärquelle · Ebenenzuordnung unsicher | je 3 |
 | nicht am Original geprüft (Original nicht abrufbar) | 1 |
 | abgeleitet aus Netzentgelt | 1 |
 
@@ -100,9 +100,9 @@ HöS/HS (n = 4) sind Werte der VNB selbst; ob sie einen ÜNB-Wert weitergeben, i
 - **Zweite Prüfung (24.11.2026):** 40 Dokumente, über Dokumente gezogen und geschichtet (30 mit Wert in der Auswertung, 5 mit Wert außerhalb, 5 ohne Wert; Seed 20261124), alle kodierten Felder, Fehlerarten vorab festgelegt (Prüfbogen); dazu eigene Suche bei 5 zufälligen VNB ohne Wert. Prüfer war wieder ein KI-Modell (ChatGPT), keine Person. Ergebnis: **0 Fehler bei Wert, Einheit, Netzebene und Ein-/Ausschluss in 109 Wertzeilen**; 1 fehlender Wert (Hertener „Umspannung“, vorher wegen unklarer Ebene weggelassen); Metadaten falsch in 4 von 40 Dokumenten (Methode, Gültigkeit, Kategorie, Dateibezug); bei 1 von 5 VNB ohne Wert war doch ein Blatt veröffentlicht (Ansbach). Alle Befunde wurden vom Autor bzw. von Claude am Original nachgesehen und korrigiert. Folgerung: Die Suche ist die größere Fehlerquelle als die Erfassung; deshalb die Nachsuche (3.2, Punkt 4).
 - Offen: eine Prüfung durch eine Person.
 
-### 3.6 Befund zur Methode (124 Dokumente der Auswertung)
-- Rechenweg ausdrücklich im Dokument: 59; nur Verweis auf das Positionspapier 2024: 23, auf 2009: 5, ohne Jahr: 6; keine Angabe: 31.
-- Methode: Fünfjahresmittel 44 · Leistungspreis eines Jahres 8 · Mittel ohne Zeitraumangabe 4 · Festpreis/Pauschale 8 · nicht angegeben 60.
+### 3.6 Befund zur Methode (125 Dokumente der Auswertung)
+- Rechenweg ausdrücklich im Dokument: 60; nur Verweis auf das Positionspapier 2024: 23, auf 2009: 5, ohne Jahr: 6; keine Angabe: 31.
+- Methode: Fünfjahresmittel 44 · Leistungspreis eines Jahres 8 · Mittel ohne Zeitraumangabe 4 · Festpreis/Pauschale 8 · Faktor × Leistungspreis (TEN) 1 · nicht angegeben 60.
 - Pauschaler Abschlag (Faktor 0,3–0,8; bei NS-Anschlüssen an MS/NS 0,5): 27 Werte aus 10 Dokumenten. Speicher-Sonderregel bei 9 Dokumenten (meist × 0,3–0,5); 4 schließen einen Speicherabschlag ausdrücklich aus (z. B. Bayernwerk ab 01.10.2026 mit Verweis auf BGH EnVR 1/24).
 
 ### 3.7 Rechnung
@@ -139,7 +139,7 @@ Je Dokument: `id`, `netzbetreiber`, `jahr`, `typ`, `region`, `bundesland`, `doku
 
 | Kategorie | Anzahl |
 |---|---|
-| Wert veröffentlicht (davon 1 Sonderformel) | 129 |
+| Wert veröffentlicht | 129 |
 | keine Angabe gefunden | 83 |
 | nur Rechenregel, kein Wert | 12 |
 | Industrienetz, keine Angabe | 9 |
@@ -149,7 +149,7 @@ Je Dokument: `id`, `netzbetreiber`, `jahr`, `typ`, `region`, `bundesland`, `doku
 | nicht prüfbar (gesperrt, Original nicht abrufbar, nur Sekundärquelle) | 4 |
 | Wert nur im Vertrag · MS bei anderer Gesellschaft · Dublette | je 1 |
 
-„Wert veröffentlicht“ umfasst auch Dokumente, deren Wert aus anderem Grund nicht in die Auswertung kommt (Sonderformel, unsichere Ebene, ÜNB).
+„Wert veröffentlicht“ umfasst auch Dokumente, deren Wert aus anderem Grund nicht in die Auswertung kommt (unsichere Ebene, ÜNB).
 
 ### 4.4 `grundgesamtheit_mastr.csv`
 `erhebungsstatus`: Wert in der Auswertung · Dokument ohne Wert in der Auswertung · gesucht, nichts gefunden · nicht im Datensatz (nicht gesucht oder Name nicht dem MaStR zugeordnet). Die Zuordnung zum MaStR ist ein Namensabgleich; maßgeblich für die Abdeckung ist 3.1.

@@ -8,10 +8,10 @@ Stichtag 24.11.2026 · Version 1.0.0
 
 Netzbetreiber verlangen beim Anschluss an Hoch- oder Mittelspannung einen Baukostenzuschuss (BKZ) je Kilowatt. Die Karte zeigt, wie hoch er wo ist.
 
-- **329 Werte von 124 Netzbetreibern**<br>
+- **332 Werte von 125 Netzbetreibern**<br>
   jeder aus dem veröffentlichten Preisblatt, mit Fundstelle und Prüfsumme (SHA-256: Fingerabdruck der ausgewerteten Datei – wer das Preisblatt später lädt, sieht daran, ob es dasselbe ist)
-- **75,8 %** – Anteil dieser Netzbetreiber an den Erlösobergrenzen 2026 aller 808 Netzbetreiber
-- **Median in €/kW netto:** HS 110,0 · HS/MS 113,0 · MS 125,5 · MS/NS 122,0
+- **77,3 %** – Anteil dieser Netzbetreiber an den Erlösobergrenzen 2026 aller 808 Netzbetreiber
+- **Median in €/kW netto:** HS 109,8 · HS/MS 111,7 · MS 125,4 · MS/NS 122,0
 
 ## Grenzen
 

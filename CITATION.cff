@@ -5,7 +5,7 @@ title: "BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb de
 abstract: >-
   Datensatz und interaktive Karte der Baukostenzuschüsse (BKZ), die deutsche Stromverteilnetzbetreiber
   für Netzanschlüsse auf Hochspannung, Umspannung HS/MS, Mittelspannung und Umspannung MS/NS erheben.
-  329 Werte von 124 Netzbetreibern (75,8 % der Erlösobergrenzen 2026), jeder Wert aus dem veröffentlichten
+  332 Werte von 125 Netzbetreibern (77,3 % der Erlösobergrenzen 2026), jeder Wert aus dem veröffentlichten
   Preisblatt mit Fundstelle und SHA-256-Prüfsumme, mit Kodierung der Berechnungsmethode. Der zuständige
   Netzbetreiber je Gemeinde und Spannungsebene ist aus dem Marktstammdatenregister der Bundesnetzagentur abgeleitet.
 authors:
