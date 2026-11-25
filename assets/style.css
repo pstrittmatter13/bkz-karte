@@ -199,4 +199,36 @@ details summary { cursor: pointer; color: var(--ink2); font-size: .84rem; font-w
 .panel::-webkit-scrollbar-thumb:hover, .tab-scroll::-webkit-scrollbar-thumb:hover { background: var(--ink3); }
 .tab-scroll::-webkit-scrollbar-corner { background: transparent; }
 .nowrap { white-space: nowrap; }
+/* Handy: Kopf knapp, Karte zuerst, Gemeinde als eigene Ansicht mit „Zurück zur Karte“ */
+.zurueck { display: none; }
+@media (max-width: 700px) {
+  .kopf { padding-top: 14px; }
+  .eyebrow { font-size: .7rem; }
+  .kopf h1 { font-size: 1.35rem; margin-bottom: 12px; }
+  .unter, .kennzahlen, .tooltip { display: none !important; }
+  main { display: flex; flex-direction: column; }
+  .regionen-leiste { order: 1; }
+  .kasten { order: 2; }
+  .leiste { padding: 10px 12px; gap: 10px; }
+  .feld, .feld-suche, .feld-legende { flex: 1 1 100%; }
+  .feld-titel { font-size: .66rem; }
+  .segment { display: flex; }
+  .segment button { flex: 1; height: 32px; padding: 0 6px; font-size: .85rem; }
+  .suche input { width: 100%; height: 38px; }
+  .legende { gap: 6px 14px; font-size: .72rem; }
+  .skala-wrap { flex: 1 1 100%; min-width: 0; }
+  .graus { flex-direction: row; flex-wrap: wrap; gap: 2px 12px; }
+  .raster { margin-top: 10px; }
+  .karte-box .hinweis { font-size: .72rem; }
+  .panel { display: none; }
+  .panel.offen {
+    display: block; position: fixed; inset: 0; z-index: 50; border: 0; border-radius: 0;
+    max-height: none; overflow: auto; padding: 0 16px 32px; box-shadow: none;
+  }
+  .zurueck {
+    display: flex; align-items: center; gap: 6px; position: sticky; top: 0; z-index: 1; width: calc(100% + 32px);
+    margin: 0 -16px 12px; padding: 12px 16px; background: var(--fl); border: 0; border-bottom: 1px solid var(--linie);
+    font: inherit; font-size: .92rem; font-weight: 600; color: var(--akzent); cursor: pointer; text-align: left;
+  }
+}
 .suche input:focus-visible, input[type=search]:focus-visible { outline: none; border-color: var(--akzent); box-shadow: 0 0 0 3px var(--akzent-fl); }

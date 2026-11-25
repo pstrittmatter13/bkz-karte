@@ -171,7 +171,7 @@
     const ms = b => block("MS-Netz", z.ms, ["MS", "MS/NS", "NS"], !hsZuerst, b);
     const hs = b => block("HS-Netz", z.hs, ["HöS/HS", "HS", "HS/MS"], hsZuerst, b);
     document.getElementById("panel").innerHTML =
-      `<h2>${esc(p.name)}</h2><p class="meta">AGS ${esc(p.ags)} · ${p.ew.toLocaleString("de-DE")} Einwohner</p>` +
+      `<button type="button" class="zurueck">← Zurück zur Karte</button><h2>${esc(p.name)}</h2><p class="meta">AGS ${esc(p.ags)} · ${p.ew.toLocaleString("de-DE")} Einwohner</p>` +
       (hsZuerst ? hs(false) + ms(gleich) : ms(false) + hs(gleich));
   }
 
@@ -180,7 +180,24 @@
     auswahl.attr("d", path(f)).raise();
     if (mitZoom) zoomeAuf(f);
     panel();
+    oeffneHandyAnsicht();
   }
+
+  // Handy: Gemeinde als eigene Ansicht über der Karte; „Zurück“ (Knopf oder Zurück-Taste) schließt sie
+  const handy = matchMedia("(max-width: 700px)");
+  const panelEl = document.getElementById("panel");
+  function oeffneHandyAnsicht() {
+    if (!handy.matches) return;
+    if (!panelEl.classList.contains("offen")) history.pushState({ gemeinde: 1 }, "");
+    panelEl.classList.add("offen"); panelEl.scrollTop = 0;
+    document.body.style.overflow = "hidden";
+  }
+  function schliesseHandyAnsicht() { panelEl.classList.remove("offen"); document.body.style.overflow = ""; }
+  panelEl.addEventListener("click", ev => {
+    if (ev.target.closest(".zurueck")) { history.state?.gemeinde ? history.back() : schliesseHandyAnsicht(); }
+  });
+  addEventListener("popstate", schliesseHandyAnsicht);
+  handy.addEventListener("change", () => { if (!handy.matches) schliesseHandyAnsicht(); });
 
   // Gemeindesuche mit eigener Vorschlagsliste
   const eingabe = document.getElementById("suche-gem"), liste = document.getElementById("vorschlaege");
