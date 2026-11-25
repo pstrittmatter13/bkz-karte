@@ -80,25 +80,29 @@ Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 
 ## Aktualisieren
 
-In `data/` und `datensatz/` wird nichts von Hand geändert – alles entsteht aus dem Datensatz und den Skripten.
+**Neues oder geändertes Preisblatt** (z. B. Blätter 2027 ab Dezember) – drei Schritte:
 
-**Neues oder geändertes Preisblatt** (z. B. Blätter 2027 ab Dezember):
+1. **Preisblatt sichern:** suchen, als PDF speichern (Webseiten als PDF drucken), Adresse notieren.
+2. **Werte erfassen:** je Ebene Wert netto, Einheit, gültig ab, Rechenmethode laut Blatt – im Arbeitsordner des Datensatzes (nicht in diesem Repositorium).
+3. **Neu bauen und veröffentlichen:** Datensatz, dann Karte; die Skripte prüfen die Regeln. Danach Version und Datum anheben.
 
-1. Preisblatt suchen, als PDF speichern (Webseiten als PDF drucken).
-2. Im Arbeitsordner des Datensatzes: PDF nach `PDFs/` als `BKZnnn_<Netzbetreiber>_<Jahr>_BKZ.pdf`, Eintrag in `_intern/records.jsonl` (Werte netto, Einheit, Gültigkeit, URL, Methode laut Blatt; neue Jahre als neue Zeile).
-3. Datensatz neu bauen und prüfen:
-   ```
-   python _intern/build.py
-   python _intern/eog_abdeckung_2026-11-24.py
-   python _intern/paket_veroeffentlichung.py      # meldet Regelverstöße (pruefung.py)
-   ```
-4. Karte neu bauen, ansehen, veröffentlichen:
-   ```
-   python src/baue_karte.py "<Pfad>/BKZ/Veroeffentlichung"
-   python -m http.server 8000                     # http://localhost:8000
-   git add -A && git commit -m "…" && git push    # GitHub Pages aktualisiert sich selbst
-   ```
-5. Version und Datum in `CITATION.cff`, README und `index.html` (`?v=`) anheben.
+<details><summary>Befehle zu Schritt 2 und 3</summary>
+
+- PDF nach `PDFs/` als `BKZnnn_<Netzbetreiber>_<Jahr>_BKZ.pdf`; Eintrag in `_intern/records.jsonl` (neue Jahre als neue Zeile).
+- Datensatz:
+  ```
+  python _intern/build.py
+  python _intern/eog_abdeckung_2026-11-24.py
+  python _intern/paket_veroeffentlichung.py      # meldet Regelverstöße (pruefung.py)
+  ```
+- Karte:
+  ```
+  python src/baue_karte.py "<Pfad>/BKZ/Veroeffentlichung"
+  python -m http.server 8000                     # ansehen: http://localhost:8000
+  git add -A && git commit -m "…" && git push    # GitHub Pages aktualisiert sich selbst
+  ```
+- Version und Datum in `CITATION.cff`, README und `index.html` (`?v=`) anheben. In `data/` und `datensatz/` nichts von Hand ändern.
+</details>
 
 <details><summary>Seltener: neuer MaStR-Stand oder neue Gemeindegrenzen</summary>
 
