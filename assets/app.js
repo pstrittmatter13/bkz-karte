@@ -18,7 +18,12 @@
   const css = getComputedStyle(document.documentElement);
   const GRAU_KEIN = css.getPropertyValue("--kein-wert").trim();
   const GRAU_NICHT = css.getPropertyValue("--nicht-erhoben").trim();
-  const NAME_EBENE = { HS: "Hochspannung", "HS/MS": "Umspannung HS/MS", MS: "Mittelspannung", "MS/NS": "Umspannung MS/NS" };
+  // verständliche Kurztexte für Status (je Netzbetreiber) und Ausschlussgründe (je Wert); sonst Text des Datensatzes
+  const STATUS = { "nicht im Datensatz": "nicht erhoben", "keine Angabe gefunden": "kein Wert gefunden", "Wert": "Wert veröffentlicht" };
+  const GRUND = { "NS (außerhalb des Geltungsbereichs; NS-BKZ nach NAV bzw. eigener NS-Regel)": "Niederspannung, nicht Teil der Karte",
+    "Sonderformel, nicht vergleichbar": "eigene Rechenformel, nicht vergleichbar",
+    "ÜNB (bundeseinheitlich)": "Übertragungsnetz, nicht Teil der Karte" };
+  const NAME_EBENE ={ HS: "Hochspannung", "HS/MS": "Umspannung HS/MS", MS: "Mittelspannung", "MS/NS": "Umspannung MS/NS" };
 
   const svg = d3.select("#karte"), W = 780, H = 1000;
   svg.attr("viewBox", `0 0 ${W} ${H}`);
@@ -125,7 +130,7 @@
     const kopf = `<h3 class="${aktiv ? "netz-aktiv" : ""}">${titel}`;
     if (!z) return `${kopf}</h3><p class="meta">${titel.startsWith("MS")
       ? "Im MaStR ist in dieser Gemeinde kein Anschluss registriert (meist gemeindefreies Gebiet)."
-      : `In dieser Gegend sind kaum Anlagen direkt am Hochspannungsnetz angeschlossen. Das HS-Netz gibt es hier, aber der Betreiber lässt sich aus dem Marktstammdatenregister nicht sicher ableiten (in der Gemeinde kein HS-Anschluss, im Kreis weniger als 10 oder keine klare Mehrheit). Den zuständigen Netzbetreiber je Adresse nennt <a href="https://www.vnbdigital.de" target="_blank" rel="noopener">VNBdigital</a>.`}</p>`;
+      : `Ein Hochspannungsnetz gibt es auch hier – auf der Karte fehlt nur sein Betreiber. Die Karte liest ihn aus dem Marktstammdatenregister ab: wer die Anlagen anschließt, die direkt an der Hochspannung hängen. Hier hängen zu wenige daran (in der Gemeinde keine, im Kreis weniger als 10 oder keine klare Mehrheit). Den zuständigen Netzbetreiber je Adresse nennt <a href="https://www.vnbdigital.de" target="_blank" rel="noopener">VNBdigital</a>.`}</p>`;
     const [nr, anteil, n, basis, kand] = z, v = K.vnb[nr] || { name: nr, kenn: {}, docs: [], status: "nicht im Datensatz" };
     const herkunft = basis === "NS" ? `abgeleitet aus ${n} NS-Anschlüssen (kein MS-Anschluss registriert)` :
       basis === "Kreis" ? `${n} HS- und HS/MS-Anschlüssen im Kreis (keiner in der Gemeinde)` :
@@ -133,19 +138,22 @@
     const andere = kand.slice(1).map(([k, c]) => `${esc(K.vnb[k]?.name || "MaStR " + k)} (${c})`).join(", ");
     let h = `${kopf}: ${esc(v.name)}</h3>
       <p class="meta">MaStR ${esc(nr)}${v.ort ? " · " + esc(v.ort) : ""}<br>Zuordnung: ${pct(anteil)} von ${herkunft}${andere ? "<br>weitere: " + andere : ""}</p>`;
-    if (!v.docs.length) return h + `<p class="meta"><span class="chip">${esc(v.status)}</span> Für diesen Netzbetreiber wurde noch kein Preisblatt erhoben.</p>`;
+    if (!v.docs.length) return h + `<p class="meta"><span class="chip">${esc(STATUS[v.status] || v.status)}</span> ${v.status === "nicht im Datensatz"
+      ? "Dieser Netzbetreiber gehört nicht zu den erhobenen (größeren) Netzbetreibern."
+      : "Gesucht, aber kein veröffentlichter Wert gefunden."}</p>`;
     const zeilen = [];
     for (const id of v.docs) {
       const d = K.docs[id];
       for (const x of d.werte) {
         if (!ebenen.includes(x.ebene)) continue;
-        zeilen.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${x.aus ? "<b>" + fmt(x.eur_kw) + "</b>" : fmt(x.eur_kw)}</td>
-          <td>${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? `<br><span class="hinweis">kVA→kW: ${esc(x.umrechnung)}</span>` : ""}</td>
-          <td>${x.aus ? "in Auswertung" : esc(x.grund || "nicht in Auswertung")}</td></tr>`);
+        const blatt = x.einheit !== "€/kW" ? `<br><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span>` : "";
+        zeilen.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${x.aus ? "<b>" + fmt(x.eur_kw) + "</b>" : fmt(x.eur_kw)}${blatt}</td>
+          <td>${x.aus ? "ja" : "nein – " + esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
       }
     }
-    h += zeilen.length ? `<table><tr><th>Ebene</th><th class="z">€/kW</th><th>laut Preisblatt</th><th>Status</th></tr>${zeilen.join("")}</table>`
-      : `<p class="meta"><span class="chip">${esc(v.status)}</span> kein Wert auf diesen Ebenen.</p>`;
+    h += zeilen.length ? `<table><tr><th>Ebene</th><th class="z">€/kW netto</th><th>zählt in Karte?</th></tr>${zeilen.join("")}</table>
+      <p class="hinweis">ja = geht in Farbe und Median ein · nein = steht im Blatt, zählt aber nicht (Grund daneben)</p>`
+      : `<p class="meta"><span class="chip">${esc(STATUS[v.status] || v.status)}</span> kein Wert auf diesen Ebenen.</p>`;
     if (belegeOben) return h + `<p class="meta">Belege: siehe oben (derselbe Netzbetreiber).</p>`;
     for (const id of v.docs) {
       const d = K.docs[id];
