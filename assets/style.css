@@ -130,6 +130,10 @@ details summary { cursor: pointer; color: var(--ink2); font-size: .84rem; font-w
 }
 #tabelle td { padding: 6px 10px; border-bottom: 1px solid var(--linie); }
 #tabelle tbody tr:hover { background: var(--akzent-fl); }
+#tabelle tr.ohne td { color: var(--ink3); }
+#tabelle tr.ohne td:first-child { color: var(--ink2); }
+#tabelle td .hinweis { margin: 0; font-size: .74rem; }
+.tab-steuer select { font: inherit; font-size: .88rem; height: 40px; padding: 0 10px; border: 1px solid var(--linie); border-radius: 10px; background: var(--fl2); color: var(--ink); }
 /* Median je Region: Feld zwischen Bedienleiste und Karte */
 .regionen-leiste { margin-top: 12px; background: var(--fl); border: 1px solid var(--linie); border-radius: var(--r); padding: 12px 18px 8px; box-shadow: var(--schatten); }
 .regionen { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }

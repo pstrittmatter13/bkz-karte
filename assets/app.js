@@ -6,7 +6,7 @@
   const datum = s => s ? s.split("-").reverse().join(".") : "";
 
   const [K, GEM, LAN] = await Promise.all([
-    d3.json("data/karte.json"), d3.json("data/gemeinden.geojson"), d3.json("data/laender.geojson")]);
+    d3.json("data/karte.json?v=" + (document.currentScript?.src.split("v=")[1] || "")), d3.json("data/gemeinden.geojson"), d3.json("data/laender.geojson")]);
 
   // Feste Klassen (€/kW) – unabhängig von Ebene und Datenstand, damit Karten vergleichbar bleiben
   const GRENZEN = [60, 90, 120, 150, 180];
@@ -255,23 +255,32 @@
   });
   knoepfe.forEach(b => b.setAttribute("aria-checked", String(b.dataset.e === ebene)));
 
-  // Tabelle aller VNB mit Wert
-  const zeilen = Object.entries(K.vnb).filter(([, v]) => Object.keys(v.kenn).length).map(([nr, v]) => {
-    const d0 = K.docs[Object.values(v.kenn)[0].id];
-    return { nr, name: v.name, region: d0.region, land: d0.land, methode: d0.methode, url: d0.url,
+  // Tabelle aller erhobenen VNB (mit und ohne Wert), Standard: nach Größe (Erlösobergrenze 2026)
+  const zeilen = Object.entries(K.vnb).filter(([, v]) => v.docs.length).map(([nr, v]) => {
+    const mitWert = Object.keys(v.kenn).length > 0;
+    const d0 = K.docs[mitWert ? Object.values(v.kenn)[0].id : v.docs[0]];
+    const art = /\.pdf$/i.test(d0.pdf || "") ? "PDF" : "Webseite";
+    return { nr, name: v.name, region: d0.region, land: d0.land, methode: mitWert ? d0.methode : null,
+      url: mitWert ? d0.url : null, art, mitWert, status: STATUS[v.status] || v.status, groesse: v.eog_mio ?? null,
       HS: v.kenn.HS?.w, "HS/MS": v.kenn["HS/MS"]?.w, MS: v.kenn.MS?.w, "MS/NS": v.kenn["MS/NS"]?.w };
   });
-  let sortK = "name", sortAuf = true;
+  let sortK = "groesse", sortAuf = false;
+  const auswahlSort = document.getElementById("sort-vnb"), auswahlZeige = document.getElementById("zeige-vnb");
   function tabelle() {
-    const q = document.getElementById("suche-vnb").value.toLowerCase();
-    const r = zeilen.filter(z => !q || z.name.toLowerCase().includes(q) || (z.land || "").toLowerCase().includes(q))
-      .sort((a, b) => { const x = a[sortK], y = b[sortK]; const c = x == null ? 1 : y == null ? -1 : typeof x === "number" ? x - y : String(x).localeCompare(y, "de"); return sortAuf ? c : -c; });
-    document.querySelector("#tabelle tbody").innerHTML = r.map(z => `<tr><td>${esc(z.name)}</td><td>${esc(z.region)}</td><td>${esc(z.land)}</td>
-      ${["HS", "HS/MS", "MS", "MS/NS"].map(e => `<td class="z">${fmt(z[e])}</td>`).join("")}<td>${esc(z.methode)}</td>
-      <td class="nowrap">${z.url ? `<a href="${esc(z.url)}" target="_blank" rel="noopener">Original ↗</a>` : ""}</td></tr>`).join("");
+    const q = document.getElementById("suche-vnb").value.toLowerCase(), zeige = auswahlZeige.value;
+    const r = zeilen.filter(z => (zeige === "alle" || (zeige === "mit") === z.mitWert) &&
+        (!q || z.name.toLowerCase().includes(q) || (z.land || "").toLowerCase().includes(q)))
+      .sort((a, b) => { const x = a[sortK], y = b[sortK]; const c = x == null ? 1 : y == null ? -1 : typeof x === "number" ? x - y : String(x).localeCompare(y, "de"); return x == null || y == null ? c : sortAuf ? c : -c; });
+    document.querySelector("#tabelle tbody").innerHTML = r.map(z => `<tr class="${z.mitWert ? "" : "ohne"}"><td>${esc(z.name)}${z.mitWert ? "" : `<br><span class="hinweis">${esc(z.status)}</span>`}</td>
+      <td>${esc(z.region)}</td><td>${esc(z.land)}</td>
+      ${["HS", "HS/MS", "MS", "MS/NS"].map(e => `<td class="z">${fmt(z[e])}</td>`).join("")}<td>${z.methode ? esc(z.methode) : "–"}</td>
+      <td class="nowrap">${z.url ? `<a href="${esc(z.url)}" target="_blank" rel="noopener" title="Adresse beim Netzbetreiber, abgerufen 24.11.2026">${z.art} ↗</a>` : "–"}</td></tr>`).join("");
     document.getElementById("tab-anzahl").textContent = `${r.length} von ${zeilen.length}`;
+    auswahlSort.value = sortK === "name" ? "name" : sortK === "groesse" ? "groesse" : "";
   }
   document.getElementById("suche-vnb").addEventListener("input", tabelle);
+  auswahlZeige.addEventListener("change", tabelle);
+  auswahlSort.addEventListener("change", () => { sortK = auswahlSort.value || "groesse"; sortAuf = sortK === "name"; tabelle(); });
   document.querySelectorAll("#tabelle th[data-k]").forEach(th => th.addEventListener("click", () => {
     sortAuf = sortK === th.dataset.k ? !sortAuf : true; sortK = th.dataset.k; tabelle();
   }));

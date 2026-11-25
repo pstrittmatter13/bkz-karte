@@ -163,14 +163,31 @@ for a in ags_liste:
 # Nur Netzbetreiber, die in der Karte oder im Datensatz vorkommen
 genutzt = {x for e in gem.values() for k in ("ms", "hs") if k in e for x in [e[k][0]] + [y[0] for y in e[k][4]]}
 genutzt |= set(vnb)
+# Größe je Netzbetreiber: Erlösobergrenze 2026 (BNetzA) über eog_zuordnung.csv, für die Sortierung der Tabelle
+eog_u = {r["Unternehmen"]: zahl(r["eog_2026_eur"]) for r in lies(os.path.join(DS, "groesse_eog_2026.csv"))}
+eog_id = {r["id"]: eog_u.get(r["eog_unternehmen"]) for r in lies(os.path.join(DS, "eog_zuordnung.csv"))}
+
+
+def norm(s):   # Namensabgleich für VNB ohne Wert (nicht in eog_zuordnung.csv): Klammern, Rechtsform, Satzzeichen weg
+    import re
+    s = re.sub(r"\(.*?\)", " ", (s or "").lower().replace("＆", "&"))
+    s = re.sub(r"\b(gmbh|mbh|ag|kg|co|eg|se|& co\.? kg)\b", " ", s)
+    return re.sub(r"[^a-zäöüß0-9]+", "", s)
+
+
+eog_norm = {norm(u): w for u, w in eog_u.items()}
 aus_vnb = {}
 for nr in sorted(genutzt):
     v = vnb.get(nr)
+    eog = max((eog_id.get(d["id"]) or eog_norm.get(norm(d["vnb"])) or 0 for d in v["docs"]), default=0) if v else 0
+    eog = eog or eog_norm.get(norm(mnamen.get(nr, {}).get("name", "")), 0)
     aus_vnb[nr] = {"name": mnamen.get(nr, {}).get("name") or (v["docs"][0]["vnb"] if v else nr),
                    "ort": mnamen.get(nr, {}).get("ort", ""),
                    "status": v["status"] if v else "nicht im Datensatz",
                    "kenn": v["kenn"] if v else {},
                    "docs": [x["id"] for x in v["docs"]] if v else []}
+    if eog:
+        aus_vnb[nr]["eog_mio"] = round(eog / 1e6, 1)
 
 # Abdeckung: Erlösobergrenzen (aus dem Datensatz) und je Ebene Gemeinden/Einwohner mit Wert
 eog_zeilen = lies(os.path.join(DS, "groesse_eog_2026.csv"))

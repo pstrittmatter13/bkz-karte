@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1.9">
+<link rel="stylesheet" href="assets/style.css?v=2.1">
 </head>
 <body>
 <header class="kopf">
@@ -65,9 +65,11 @@
 
   <section class="kasten">
     <div class="kasten-kopf">
-      <h2>Alle Netzbetreiber mit Wert</h2>
+      <h2>Alle erhobenen Netzbetreiber</h2>
       <div class="tab-steuer">
         <input id="suche-vnb" type="search" placeholder="Netzbetreiber oder Land filtern" autocomplete="off">
+        <select id="zeige-vnb" aria-label="Anzeigen"><option value="alle">alle</option><option value="mit">mit Wert</option><option value="ohne">ohne Wert</option></select>
+        <select id="sort-vnb" aria-label="Sortieren"><option value="groesse">nach Größe</option><option value="name">nach Name</option><option value="" hidden>nach Spalte</option></select>
         <span id="tab-anzahl"></span>
         <a class="knopf" href="datensatz/bkz_werte_lang.csv" download>Werte als CSV</a>
       </div>
@@ -77,12 +79,12 @@
         <thead><tr>
           <th data-k="name">Netzbetreiber</th><th data-k="region">Region</th><th data-k="land">Land</th>
           <th data-k="HS" class="z">HS</th><th data-k="HS/MS" class="z">HS/MS</th><th data-k="MS" class="z">MS</th><th data-k="MS/NS" class="z">MS/NS</th>
-          <th data-k="methode">Methode</th><th>Preisblatt</th>
+          <th data-k="methode">Methode</th><th>Original</th>
         </tr></thead>
         <tbody></tbody>
       </table>
     </div>
-    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. „Original“ führt zur Adresse des Preisblatts beim Netzbetreiber (abgerufen 24.11.2026).</p>
+    <p class="hinweis">€/kW netto, am Stichtag gültig, nach den Regeln des Datensatzes. €/kVA mit dem Faktor laut Preisblatt umgerechnet, ohne Angabe 1,0. Größe = Erlösobergrenze 2026 (BNetzA). „PDF“ führt zum Preisblatt beim Netzbetreiber, „Webseite“ zur Seite, auf der der Netzbetreiber die BKZ-Tabelle direkt veröffentlicht (kein PDF); Adressen abgerufen 24.11.2026. – = kein Wert.</p>
   </section>
 
   <section class="kasten">
@@ -133,6 +135,6 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="assets/app.js?v=2.0"></script>
+<script src="assets/app.js?v=2.2"></script>
 </body>
 </html>
