@@ -12,7 +12,7 @@ authors:
   - family-names: Schneider-Strittmatter
     given-names: Paul
     affiliation: "HTWG Hochschule Konstanz – Technik, Wirtschaft und Gestaltung"
-    # orcid: "https://orcid.org/0000-0000-0000-0000"   # vor der Zenodo-Veröffentlichung ergänzen
+    orcid: "https://orcid.org/0009-0009-0218-4134"
 version: "1.0.0"
 date-released: "2026-11-24"
 url: "https://pstrittmatter13.github.io/bkz-karte/"
