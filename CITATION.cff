@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "Wenn Sie Daten oder Karte verwenden, zitieren Sie bitte wie folgt."
 type: dataset
-title: "BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026"
+title: "Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026"
 abstract: >-
   Datensatz und interaktive Karte der Baukostenzuschüsse (BKZ), die deutsche Stromverteilnetzbetreiber
   für Netzanschlüsse auf Hochspannung, Umspannung HS/MS, Mittelspannung und Umspannung MS/NS erheben.

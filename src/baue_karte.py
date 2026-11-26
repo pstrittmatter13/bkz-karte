@@ -28,7 +28,7 @@ from datetime import date
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DS = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("BKZ_DATENSATZ")
 if not DS or not os.path.isfile(os.path.join(DS, "bkz_werte_lang.csv")):
-    sys.exit("Ordner der Veröffentlichungsfassung angeben (enthält bkz_werte_lang.csv), siehe README „Aktualisieren“.")
+    sys.exit("Ordner der Veröffentlichungsfassung angeben (enthält bkz_werte_lang.csv), siehe WARTUNG.md.")
 KREIS_MIN_N, KREIS_MIN_ANTEIL = 10, 0.6
 EBENEN = ["HöS/HS", "HS", "HS/MS", "MS", "MS/NS", "NS"]
 GRUPPE = {"HöS/HS": "hs", "HS": "hs", "HS/MS": "hs", "MS": "ms", "MS/NS": "ms", "NS": "ms"}

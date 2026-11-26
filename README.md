@@ -1,57 +1,71 @@
-# BKZ-Karte
+# Baukostenzuschüsse für Netzanschlüsse in Deutschland 2026
 
-**Baukostenzuschüsse für Netzanschlüsse oberhalb der Niederspannung in Deutschland**<br>
-**je Gemeinde und Netzebene**
+**Datensatz und Karte der Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung**
 
-Karte öffnen: **https://pstrittmatter13.github.io/bkz-karte/**<br>
-Stichtag 24.11.2026 · Version 1.0.0
+Version 1.0.0 · Stichtag 24.11.2026 · [Karte öffnen](https://pstrittmatter13.github.io/bkz-karte/)
 
-Netzbetreiber verlangen beim Anschluss an Hoch- oder Mittelspannung einen Baukostenzuschuss (BKZ) je Kilowatt. Die Karte zeigt, wie hoch er wo ist.
+---
 
-- **332 Werte von 125 Netzbetreibern**<br>
-  jeder aus dem veröffentlichten Preisblatt, mit Fundstelle und Prüfsumme (SHA-256: Fingerabdruck der ausgewerteten Datei – wer das Preisblatt später lädt, sieht daran, ob es dasselbe ist)
-- **77,3 %** – Anteil dieser Netzbetreiber an den Erlösobergrenzen 2026 aller 808 Netzbetreiber
-- **Median in €/kW netto:** HS 109,8 · HS/MS 111,7 · MS 125,4 · MS/NS 122,0
+## Überblick
 
-## Grenzen
+Wer eine Anlage an das Hoch- oder Mittelspannungsnetz anschließt, zahlt dem Netzbetreiber einen einmaligen Baukostenzuschuss (BKZ) je Kilowatt Anschlussleistung. Höhe und Berechnung legt jeder Netzbetreiber selbst fest und veröffentlicht sie in eigenen Preisblättern; eine bundesweite Übersicht gibt es bislang nicht.
 
-- **Nur die größeren Netzbetreiber.** Gesucht wurden die Preisblätter der Netzbetreiber nach Größe bis 90 % der Erlösobergrenzen (mit Nachsuche 241); die übrigen rund 570 meist kleinen Netzbetreiber nicht. Keine Zufallsstichprobe.
-- **Werte wie veröffentlicht:** netto, am Stichtag gültig, mit pauschalen Abschlägen; ohne Speicher- und Flexrabatte.
-- **Mediane je Netzbetreiber:** jeder Netzbetreiber zählt einmal – ein großer nicht mehr als ein kleiner.
-- **Grau heißt nicht „kein BKZ“:** dunkelgrau = gesucht, aber kein Wert, der zählt (Grund in der Tabelle); hellgrau = nicht gesucht oder Netzbetreiber unklar. Es wird nichts geschätzt.
+Dieses Repositorium stellt die veröffentlichten Werte zusammen, belegt jeden Wert mit seiner Fundstelle und ordnet sie auf einer Karte den Gemeinden zu.
 
-Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
+| Kennzahl | Wert |
+|---|---|
+| Werte | 332 von 125 Netzbetreibern |
+| Abdeckung | 77,3 % der Erlösobergrenzen 2026 aller 808 Stromverteilnetzbetreiber |
+| Median in €/kW (netto) | HS 109,8 · HS/MS 111,7 · MS 125,4 · MS/NS 122,0 |
 
-## Wie Datensatz und Karte entstanden sind
+HS = Hochspannung, MS = Mittelspannung, NS = Niederspannung; HS/MS und MS/NS bezeichnen die Umspannebenen.
 
-**Werte erheben**
-1. **Auswahl:** alle 808 Stromverteilnetzbetreiber der BNetzA-Liste der Erlösobergrenzen 2026, nach Größe sortiert; durchsucht bis 90 % der Erlösobergrenzen (234 Netzbetreiber).
-2. **Suche:** Website jedes Netzbetreibers (Netzanschluss, Preise, Downloads) und Websuche nach dem Preisblatt; ein zweiter Durchgang für alle ohne Fund. Seiten, die automatische Abrufe sperren, wurden im Browser von Hand geladen.
-3. **Erfassung:** jedes Preisblatt als Datei gesichert und mit SHA-256-Prüfsumme festgehalten; Werte netto in der Einheit des Blatts übernommen, Netzebene vereinheitlicht, Rechenmethode, Abschläge und Speicherregeln aus dem Text kodiert.
-4. **Regeln:** Ein Wert zählt, wenn das Blatt am Stichtag 24.11.2026 gilt, der Wert im Original nachgelesen ist und eindeutig einer Ebene oberhalb der Niederspannung gehört; jeder Ausschluss ist mit Grund vermerkt.
-5. **Prüfung:** Stichprobe von 40 Werten durch den Autor; zwei unabhängige Prüfungen von zusammen 60 zufällig gezogenen Dokumenten gegen das Original, mit vorab festgelegten Fehlerarten (0 Fehler bei Wert, Einheit und Netzebene; Fehler in Zusatzangaben und ein übersehenes Preisblatt wurden korrigiert); danach Nachsuche bei den größten Netzbetreibern ohne Wert; Regelprüfung per Skript.
+## Methode
 
-**Karte bauen**
+1. **Grundgesamtheit:** Gesucht wurde bei den Netzbetreibern, die zusammen 90 % der Erlösobergrenzen 2026 der Bundesnetzagentur auf sich vereinen (234 Netzbetreiber, mit Nachsuche 241).
+2. **Erhebung:** Preisblätter wurden auf den Internetseiten der Netzbetreiber gesucht, als Datei gesichert und mit einer SHA-256-Prüfsumme versehen. Netzbetreiber ohne Fund wurden in einem zweiten Durchgang nach festem Protokoll erneut gesucht.
+3. **Aufnahme:** Ein Wert wird aufgenommen, wenn das Preisblatt am Stichtag gilt, der Wert im Original nachgelesen ist und eindeutig einer Netzebene oberhalb der Niederspannung zugeordnet werden kann. Jeder Ausschluss ist mit Grund dokumentiert.
+4. **Prüfung:** Eine Stichprobe von 40 Werten wurde vom Autor am Original geprüft, zwei weitere Prüfungen umfassten zusammen 60 zufällig gezogene Dokumente. Bei Wert, Einheit und Netzebene wurden keine Fehler gefunden; Fehler in Zusatzangaben wurden berichtigt.
+5. **Karte:** Der zuständige Netzbetreiber je Gemeinde und Netzebene wird aus dem Marktstammdatenregister abgeleitet, für das Hochspannungsnetz ergänzend aus [VNBdigital](https://www.vnbdigital.de). Netzgebietsgrenzen werden nicht amtlich veröffentlicht.
 
-6. **Netzbetreiber je Gemeinde:** aus dem Marktstammdatenregister (8,2 Mio. Anlagen in Betrieb) gezählt, an welchen Netzbetreiber die Anlagen einer Gemeinde auf welcher Spannungsebene angeschlossen sind; zuständig ist der mit den meisten Anschlüssen. Wo für das HS-Netz zu wenige Anlagen vorliegen, nennt [VNBdigital](https://www.vnbdigital.de) (Plattform der Verteilnetzbetreiber, § 14e EnWG) den Netzbetreiber mit Hochspannung; je Gemeinde mit Abrufdatum und Link in `zuordnung_vnbdigital.csv`.
-7. **Verknüpfen:** Netzbetreiber im Datensatz und im Register über die Registernummer; Gemeindegrenzen vom BKG.
-8. **Seite:** statisches HTML, vollständig aus den Skripten in `src/` erzeugt – derselbe Stand ergibt dieselbe Karte.
+Ausführlich: [Datensatz](datensatz/README.md) (Codebuch, Regeln, Prüfung) · [Karte](METHODIK.md) (Zuordnung der Netzbetreiber zu Gemeinden).
 
-## Zitieren
+## Geltungsbereich und Grenzen
 
-> Schneider-Strittmatter, P. (2026): *BKZ-Karte: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026* (Version 1.0.0) [Datensatz und Karte]. https://github.com/pstrittmatter13/bkz-karte
+- **Größere Netzbetreiber:** Die rund 570 kleineren Netzbetreiber außerhalb der Grundgesamtheit wurden nicht erhoben. Die Auswahl ist keine Zufallsstichprobe; Aussagen gelten für die erhobenen Netzbetreiber.
+- **Werte wie veröffentlicht:** netto, am Stichtag gültig, einschließlich pauschaler Abschläge. Sonderregeln für Speicher und flexible Netzanschlussvereinbarungen sind dokumentiert, aber nicht eingerechnet.
+- **Kennzahlen je Netzbetreiber:** Jeder Netzbetreiber geht mit einem Wert je Netzebene ein, unabhängig von seiner Größe.
+- **Keine Schätzung:** Gemeinden ohne aufgenommenen Wert bleiben grau. Dunkelgrau: gesucht, kein verwertbarer Wert (Grund in der Tabelle); hellgrau: nicht gesucht oder Netzbetreiber nicht eindeutig.
+- **Zuordnung auf Gemeindeebene:** Teilen sich mehrere Netzbetreiber eine Gemeinde, zeigt die Karte den überwiegenden.
+
+Maßgeblich ist stets das Preisblatt des Netzbetreibers.
+
+## Inhalt
+
+| Pfad | Inhalt |
+|---|---|
+| `datensatz/` | BKZ-Datensatz: Werte, Quellen, Suchprotokoll, Prüfstichprobe, Prüfsummen |
+| `data/` | Kartendaten: Netzbetreiber je Gemeinde, Gemeindegrenzen |
+| `src/` | Skripte, aus denen `data/` und die Karte vollständig erzeugt werden |
+| `index.html`, `assets/` | Karte |
+| `zuordnung_*.csv` | manuelle und VNBdigital-Zuordnungen mit Abrufdatum |
+
+Pflege und Aktualisierung: [WARTUNG.md](WARTUNG.md).
+
+## Zitierempfehlung
+
+> Schneider-Strittmatter, P. (2026): *Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026.* Datensatz und Karte, Version 1.0.0. https://github.com/pstrittmatter13/bkz-karte
 
 <details><summary>BibTeX</summary>
 
 ```bibtex
 @misc{schneiderstrittmatter2026bkzkarte,
   author       = {Schneider-Strittmatter, Paul},
-  title        = {{BKZ-Karte}: Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026},
+  title        = {Baukostenzuschüsse der Stromverteilnetzbetreiber oberhalb der Niederspannung in Deutschland, Stichtag 24.11.2026},
   year         = {2026},
   version      = {1.0.0},
-  howpublished = {Datensatz und interaktive Karte},
-  url          = {https://github.com/pstrittmatter13/bkz-karte},
-  note         = {Karte: https://pstrittmatter13.github.io/bkz-karte/}
+  howpublished = {Datensatz und Karte},
+  url          = {https://github.com/pstrittmatter13/bkz-karte}
 }
 ```
 </details>
@@ -61,59 +75,16 @@ Alle Regeln und Ausschlüsse: [Datensatz-README](datensatz/README.md).
 | | |
 |---|---|
 | Daten, Karte, Texte | © 2026 Paul Schneider-Strittmatter, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de) |
-| Code | MIT ([LICENSE](LICENSE)) |
-| BKZ-Werte | Preisblätter der Netzbetreiber, je Wert verlinkt; maßgeblich sind die Preisblätter |
+| Programmcode | [MIT](LICENSE) |
+| BKZ-Werte | Preisblätter der Netzbetreiber, je Wert verlinkt |
 | Netzbetreiber je Gemeinde | Bundesnetzagentur, [Marktstammdatenregister](https://www.marktstammdatenregister.de/MaStR/Datendownload), Export 24.11.2026, [dl-de/by-2-0](https://www.govdata.de/dl-de/by-2-0); Daten verändert |
-| Gemeindegrenzen | © [BKG](https://www.bkg.bund.de) (2026) [dl-de/by-2-0](https://www.govdata.de/dl-de/by-2-0), Datenquellen: [datenquellen_vg_nuts.pdf](https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_vg_nuts.pdf); Daten verändert |
+| Gemeindegrenzen | © [BKG](https://www.bkg.bund.de) (2026), [dl-de/by-2-0](https://www.govdata.de/dl-de/by-2-0), Datenquellen: [datenquellen_vg_nuts.pdf](https://sgx.geodatenzentrum.de/web_public/gdz/datenquellen/datenquellen_vg_nuts.pdf); Daten verändert |
 | Erlösobergrenzen 2026 | Bundesnetzagentur, Veröffentlichung nach § 23b EnWG |
 
-## Dateien
+## Entstehung und Kontakt
 
-| Ordner / Datei | Inhalt |
-|---|---|
-| `index.html`, `assets/` | die Seite |
-| `datensatz/` | BKZ-Datensatz mit eigenem [README](datensatz/README.md) (Codebuch, Regeln, Prüfung) |
-| `data/` | Kartendaten: `karte.json`, Zählung aus dem Marktstammdatenregister, Gemeindegrenzen |
-| `src/` | Skripte, die `data/` erzeugen |
-| `zuordnung_hand.csv` | Ausnahmen beim Abgleich Datensatz ↔ Marktstammdatenregister |
-| `zuordnung_vnbdigital.csv` | HS-Betreiber laut VNBdigital für Gemeinden ohne MaStR-Zuordnung (Abrufdatum, Link je Gemeinde) |
-| `METHODIK.md` · `CITATION.cff` · `LICENSE` | Methodik · Zitierangaben · Lizenzen |
-
-## Aktualisieren
-
-**Neues oder geändertes Preisblatt** (z. B. Blätter 2027 ab Dezember) – drei Schritte:
-
-1. **Preisblatt sichern:** suchen, als PDF speichern (Webseiten als PDF drucken), Adresse notieren.
-2. **Werte erfassen:** je Ebene Wert netto, Einheit, gültig ab, Rechenmethode laut Blatt – im Arbeitsordner des Datensatzes (nicht in diesem Repositorium).
-3. **Neu bauen und veröffentlichen:** Datensatz, dann Karte; die Skripte prüfen die Regeln. Danach Version und Datum anheben.
-
-<details><summary>Befehle zu Schritt 2 und 3</summary>
-
-- PDF nach `PDFs/` als `BKZnnn_<Netzbetreiber>_<Jahr>_BKZ.pdf`; Eintrag in `_intern/records.jsonl` (neue Jahre als neue Zeile).
-- Datensatz:
-  ```
-  python _intern/build.py
-  python _intern/eog_abdeckung_2026-11-24.py
-  python _intern/paket_veroeffentlichung.py      # meldet Regelverstöße (pruefung.py)
-  ```
-- Karte:
-  ```
-  python src/baue_karte.py "<Pfad>/BKZ/Veroeffentlichung"
-  python -m http.server 8000                     # ansehen: http://localhost:8000
-  git add -A && git commit -m "…" && git push    # GitHub Pages aktualisiert sich selbst
-  ```
-- Version und Datum in `CITATION.cff`, README und `index.html` (`?v=`) anheben. In `data/` und `datensatz/` nichts von Hand ändern.
-</details>
-
-<details><summary>Seltener: neuer MaStR-Stand oder neue Gemeindegrenzen</summary>
-
-- **Marktstammdatenregister** (z. B. jährlich): [Gesamtdatenexport](https://www.marktstammdatenregister.de/MaStR/Datendownload) nach `rohdaten/` laden (≈ 3,3 GB), dann `python src/netzbetreiber_gemeinde.py rohdaten/Gesamtdatenexport_<datum>_<version>.zip` (≈ 6 min) und `baue_karte.py`.
-- **Gemeindegrenzen** (BKG, jährlich): [VG250-EW](https://gdz.bkg.bund.de) als GeoPackage laden, `python src/gemeinden.py <DE_VG250.gpkg>`, dann `baue_karte.py`.
-- Meldet `baue_karte.py` einen Wert ohne MaStR-Nummer: Zeile in `zuordnung_hand.csv` ergänzen.
-- Voraussetzung: Python 3.11+ mit `lxml` und `shapely`; `rohdaten/` ist nicht im Repositorium.
-</details>
+Erstellt im Rahmen einer Bachelorarbeit an der Hochschule Konstanz (HTWG). Bei Recherche, Erfassung und Programmierung wurde der KI-Assistent Claude (Anthropic) eingesetzt; Auswahl, Prüfung und Verantwortung liegen beim Autor. Hinweise auf Fehler oder neue Preisblätter bitte als [Issue](https://github.com/pstrittmatter13/bkz-karte/issues).
 
 ---
 
-<sub>**Hinweis zu den Netzgebieten:** Netzgebietsgrenzen werden nicht amtlich veröffentlicht. Zuständig ist auf der Karte der Netzbetreiber, an den laut Marktstammdatenregister die meisten Anlagen der Gemeinde angeschlossen sind; Gemeinden mit mehreren Netzbetreibern erscheinen beim überwiegenden. Das HS-Netz wird nur bei klarer Mehrheit zugeordnet – in Gegenden, in denen kaum Anlagen direkt an der Hochspannung hängen (z. B. Raum Tuttlingen–Rottweil), kommt der Betreiber aus VNBdigital (3.009 Gemeinden, Stand 26.11.2026); nennt VNBdigital mehrere oder keinen, bleibt es offen (141 Gemeinden). Einzelheiten: [METHODIK.md](METHODIK.md).<br>
-Entstanden im Rahmen einer Bachelorarbeit an der HTWG Konstanz, mit Unterstützung des KI-Assistenten Claude (Anthropic) unter Anleitung und Verantwortung des Autors. Jeder Wert ist am Original geprüft (Stichprobe und zwei KI-Prüfungen ohne Wertfehler; Einzelheiten im Datensatz-README, Abschnitt 3.5). Fehler gefunden? → [Issue anlegen](https://github.com/pstrittmatter13/bkz-karte/issues)</sub>
+<sub>**English summary.** Grid connection charges (Baukostenzuschuss, BKZ) of German distribution system operators above low voltage, valid on 24 Nov 2026: 332 values from 125 operators covering 77.3 % of the 2026 revenue caps, each traced to the operator's published price sheet with checksum, and mapped to municipalities via the German market master data register. Data CC BY 4.0, code MIT.</sub>
