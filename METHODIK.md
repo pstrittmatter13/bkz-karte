@@ -56,7 +56,7 @@ Gespeichert werden je Gemeinde die angezeigten Netzbetreiber mit Hochspannung, d
 
 **Regel:** Nennt VNBdigital genau einen Netzbetreiber mit Hochspannung, gilt er für die Gemeinde (Panel: „laut VNBdigital“, mit Link und Abrufdatum). Nennt es mehrere, bleibt die Gemeinde grau und das Panel nennt alle. Die MaStR-Nummer kommt über den Namen aus `data/mastr_netzbetreiber.csv`.
 
-**Stand 25.11.2026:** 132 Gemeinden (Pilot: Kreise Freudenstadt, Rottweil, Schwarzwald-Baar, Tuttlingen, Tübingen, Zollernalb; Test: Lübeck, Neumünster, Ahrensburg); 130 mit einem HS-Betreiber, 2 mit mehreren (Schramberg, Mönchweiler). Die übrigen rund 2.900 Lücken-Gemeinden folgen.
+**Stand 26.11.2026:** alle 3.150 Gemeinden ohne HS-Zuordnung nach der MaStR-Regel abgefragt (132 per Suche nach Gemeinde, übrige an einem Punkt, Abruf 25.–26.11.2026): 3.009 mit einem HS-Betreiber, 31 mit mehreren, 110 ohne Netzbetreiber mit Hochspannung an diesem Punkt (vor allem Baden-Württemberg, Bayern, Hessen; bleiben grau). Drei Namen schreibt VNBdigital anders als das MaStR (badenova, Energienetze Offenbach, SEW); sie sind im Skript ausdrücklich zugeordnet. Stichprobe: 2 von 5 zufällig gezogenen Gemeinden auf der Seite nachgesehen, beide gleich.
 
 ## 3 Verknüpfung Datensatz ↔ MaStR
 

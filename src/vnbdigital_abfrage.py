@@ -28,6 +28,9 @@ URL = "https://www.vnbdigital.de/gateway/graphql"
 FILTER = "eyJvbmx5TmFwIjpmYWxzZSwidm9sdGFnZVR5cGVzIjpbIkhvY2hzcGFubnVuZyJdLCJ3aXRoUmVnaW9ucyI6ZmFsc2V9"
 QUERY = ("query ($c: String) { vnb_coordinates(coordinates: $c) { vnbs(filter: {onlyNap: false, "
          "voltageTypes: [Hochspannung], withRegions: false}) { _id name types voltageTypes } } }")
+# Namen bei VNBdigital, die im MaStR anders geschrieben sind (geprüft 26.11.2026 an grundgesamtheit_mastr.csv)
+ALIAS = {"Badenova Netze GmbH": "badenovaNETZE GmbH", "Energienetze Offenbach GmbH (ENO)": "Energienetze Offenbach GmbH",
+         "SEW Stromversorgungs-GmbH": "SEW Stromversorgungs GmbH"}
 SPALTEN = ["ags", "gemeinde", "kreis", "hs_betreiber", "mastr_nr", "abruf", "vnbdigital_url", "punkt"]
 
 
@@ -64,7 +67,8 @@ def main():
     vorhanden = lies_csv(ZIEL)
     erledigt = set()
     if os.path.isfile(ROH):
-        erledigt = {json.loads(z)["ags"] for z in open(ROH, encoding="utf-8") if z.strip()}
+        erledigt = {r["ags"] for r in map(json.loads, filter(str.strip, open(ROH, encoding="utf-8")))
+                    if (r.get("antwort") or {}).get("data")}            # fehlgeschlagene Abfragen erneut
     offen = [f for f in G["features"]
              if "hs" not in K["gem"].get(f["properties"]["ags"], {}) or K["gem"][f["properties"]["ags"]]["hs"][3] == "VNBdigital"]
     offen = [f for f in offen if f["properties"]["ags"] not in vorhanden and f["properties"]["ags"] not in erledigt][:maxn]
@@ -110,7 +114,7 @@ def uebernehmen():
             fehler.append(r["name"])
             continue
         namen = [v["name"] for v in vnbs if "Hochspannung" in (v.get("voltageTypes") or [])]
-        nrs = [mastr.get(" ".join(n.replace("＆", "&").lower().split()), "") for n in namen]
+        nrs = [mastr.get(" ".join(ALIAS.get(n, n).replace("＆", "&").lower().split()), "") for n in namen]
         ohne_nr |= {n for n, x in zip(namen, nrs) if not x}
         zeilen[r["ags"]] = {"ags": r["ags"], "gemeinde": r["name"], "kreis": "", "hs_betreiber": "|".join(namen),
                             "mastr_nr": "|".join(nrs), "abruf": r["abruf"], "punkt": r["punkt"],

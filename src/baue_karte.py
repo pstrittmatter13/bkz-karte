@@ -32,8 +32,9 @@ if not DS or not os.path.isfile(os.path.join(DS, "bkz_werte_lang.csv")):
 KREIS_MIN_N, KREIS_MIN_ANTEIL = 10, 0.6
 EBENEN = ["HöS/HS", "HS", "HS/MS", "MS", "MS/NS", "NS"]
 GRUPPE = {"HöS/HS": "hs", "HS": "hs", "HS/MS": "hs", "MS": "ms", "MS/NS": "ms", "NS": "ms"}
-KOPIE = ["bkz_werte_lang.csv", "bkz_quellen.csv", "grundgesamtheit_mastr.csv", "download_log.csv",
-         "eog_zuordnung.csv", "groesse_eog_2026.csv", "uenb_regionalfaktoren.csv", "README.md", "SHA256SUMS.txt"]
+# datensatz/ = vollständige Veröffentlichungsfassung: alle Dateien aus SHA256SUMS.txt plus diese selbst,
+# damit die Prüfsummen im Repo aufgehen (Zeilenenden schützt .gitattributes: datensatz/** -text)
+KOPIE = [z.split(maxsplit=1)[1].strip() for z in open(os.path.join(DS, "SHA256SUMS.txt"), encoding="utf-8") if z.strip()]     + ["SHA256SUMS.txt"]
 
 
 def lies(pfad):
@@ -63,7 +64,7 @@ dok = {}       # id -> Dokument
 for q in quellen:
     nr = hand[q["id"]]["mastr_nr"] if q["id"] in hand else name2nr.get(q.get("mastr_name") or "")
     dok[q["id"]] = {
-        "id": q["id"], "nr": nr, "vnb": q["netzbetreiber"], "jahr": q["jahr"], "typ": q["typ"], "region": q["region"],
+        "id": q["id"], "nr": nr, "vnb": q["netzbetreiber"], "jahr": q.get("bezugsjahr") or q.get("jahr"), "typ": q["typ"], "region": q["region"],
         "land": q["bundesland"], "titel": q["dokument"], "url": q["doc_url"], "pdf": q["pdf_datei"],
         "sha256": sha.get(q["id"], ""), "gueltig_ab": q["gueltig_ab"], "gueltig_bis": q["gueltig_bis"],
         "stand": q["stand"], "einheit": q["einheit"], "kategorie": q["veroeffentlichung"],
@@ -238,8 +239,7 @@ with open(os.path.join(ROOT, "data", "karte.json"), "w", encoding="utf-8") as f:
 
 os.makedirs(os.path.join(ROOT, "datensatz"), exist_ok=True)
 for n in KOPIE:
-    if os.path.exists(os.path.join(DS, n)):
-        shutil.copy2(os.path.join(DS, n), os.path.join(ROOT, "datensatz", n))
+    shutil.copy2(os.path.join(DS, n), os.path.join(ROOT, "datensatz", n))
 
 print("Gemeinden:", len(gem), dict(stat))
 print("VNB im Datensatz mit MaStR-Nr.:", len(vnb), "· mit Wert:", sum(1 for v in vnb.values() if v["kenn"]))
