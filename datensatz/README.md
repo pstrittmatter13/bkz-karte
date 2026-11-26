@@ -63,7 +63,7 @@ Grundgesamtheit sind die aktiven öffentlichen Stromnetzbetreiber laut MaStR (82
 1. Erster Durchgang: Website des Netzbetreibers (Netzanschluss, Preise, Downloads) und Websuche nach Preisblatt und Dateinamen; ergebnisbezogen in `bkz_quellen.csv` (`fundort`, `anmerkung`) dokumentiert, nicht als eigenes Protokoll.
 2. Zweiter Durchgang (24.11.2026) für alle VNB ohne Wert: Websuche „Baukostenzuschuss Mittelspannung 2026“ mit Domainfilter auf die Website des Netzbetreibers; jeder Treffer am Original geprüft (`suchprotokoll_2026-11-24.jsonl`).
 3. Server, die automatische Abrufe sperren (HTTP 403, JavaScript), wurden im Browser von Hand geladen. Webseiten als Original sind als HTML gesichert; lädt eine Seite ihren Inhalt per JavaScript, als Textauszug des angezeigten Inhalts mit Abrufzeit (N-ERGIE).
-4. Nachsuche (24.11.2026) nach der zweiten Prüfung (3.5): der Autor hat die größten VNB ohne Wert nach EOG im Browser durchsucht. Neu: Avacon, N-ERGIE, Stadtwerke Tuttlingen; bei SWM, MVV und Ulm Netze bestätigt, dass oberhalb NS kein Wert veröffentlicht ist. TEN (bisher als „Sonderformel“ ausgeschlossen) zählt seit 25.11.2026: Das Merkblatt nennt S. 2 die Werte ausdrücklich als „Baukostenzuschuss in € pro kW (netto)“; die Formel auf S. 1 (Faktor × Leistungspreis) ergibt mit dem Leistungspreis 2026 nicht diese Werte, maßgeblich ist der veröffentlichte Wert. Die Werte (HS 10,26 · HS/MS 11,63 · MS 11,94 €/kW) sind auffällig niedrig.
+4. Nachsuche (24.11.2026) nach der zweiten Prüfung (3.5): der Autor hat die größten VNB ohne Wert nach EOG im Browser durchsucht. Neu: Avacon, N-ERGIE, Stadtwerke Tuttlingen; bei SWM, MVV und Ulm Netze bestätigt, dass oberhalb NS kein Wert veröffentlicht ist. TEN (bisher als „Sonderformel“ ausgeschlossen) zählt seit 25.11.2026: Das Merkblatt nennt S. 2 die Werte ausdrücklich als „Baukostenzuschuss in € pro kW (netto)“; die Formel auf S. 1 (Faktor × Leistungspreis) ergibt mit dem Leistungspreis 2026 nicht diese Werte; mit dem Zwölffachen passen HS und HS/MS (12 × 0,0076 × 112,06 = 10,22 bzw. 12 × 0,0076 × 126,53 = 11,54 €/kW), MS nicht (13,28 statt 11,94). Maßgeblich ist der veröffentlichte Wert. Die Werte (HS 10,26 · HS/MS 11,63 · MS 11,94 €/kW) sind auffällig niedrig.
 
 „Keine Angabe gefunden“ heißt: nach den Suchdurchgängen nicht gefunden – nicht „nicht veröffentlicht“.
 
@@ -115,7 +115,7 @@ Quantile mit linearer Interpolation (pandas-Standard = Excel QUANTIL.INKL = R ty
 | Spalte | Inhalt |
 |---|---|
 | `id` | Dokument-ID `BKZnnn`, gleich in allen Dateien und im Dateinamen des Originals |
-| `netzbetreiber`, `jahr`, `typ`, `region`, `bundesland` | Name laut Dokument · Bezugsjahr · eigene Einordnung (Flächennetzbetreiber, Regionalversorger, Stadtwerk …) · Nord/Ost/West/Süd nach Hauptnetzgebiet · Kürzel |
+| `netzbetreiber`, `bezugsjahr`, `typ`, `region`, `bundesland` | Name laut Dokument · Jahr, für das das Dokument in der Erhebung steht (2026 = Auswertung zum Stichtag; 2025 = Vorjahresblatt, 2027 = Folgejahresblatt, beide nur Historie; genaues Datum in `gueltig_ab`) · eigene Einordnung (Flächennetzbetreiber, Regionalversorger, Stadtwerk …) · Nord/Ost/West/Süd nach Hauptnetzgebiet · Kürzel |
 | `netzebene` | HöS/HS · HS · HS/MS · MS · MS/NS · NS |
 | `netzebene_original` | Bezeichnung im Dokument |
 | `bkz_netto`, `einheit` | Wert netto in der Einheit des Dokuments (€/kW oder €/kVA) |
@@ -133,7 +133,7 @@ Quantile mit linearer Interpolation (pandas-Standard = Excel QUANTIL.INKL = R ty
 | `gilt_stichtag` | ja / nein mit Grund (Regel 3.4) |
 
 ### 4.2 `bkz_quellen.csv`
-Je Dokument: `id`, `netzbetreiber`, `jahr`, `typ`, `region`, `bundesland`, `dokument` (Titel), `doc_url`, `pdf_datei`, `gueltig_ab`, `gueltig_bis`, `stand`, `einheit`, `anzahl_werte`, `wert_status`, `methode`, `faktor`, `speicher_regel`, `mastr_name` (Name im MaStR), `flex_regel`, `fundort` (Menüpfad), `suchhinweis_folgejahr` (Dateinamensmuster), `anmerkung`, `abrufdatum` (Stichtag), `veroeffentlichung` (4.3), `suche_2_beleg` (Ergebnis des zweiten Durchgangs), `gilt_2026`, `gilt_stichtag`, `methode_kat`, `methode_beleg`, `faktor_num`, `speicher_sonderregel`, `speicher_faktor`, `methode_notiz`. Bedeutung wie 4.1.
+Je Dokument: `id`, `netzbetreiber`, `bezugsjahr`, `typ`, `region`, `bundesland`, `dokument` (Titel), `doc_url`, `pdf_datei`, `gueltig_ab`, `gueltig_bis`, `stand`, `einheit`, `anzahl_werte`, `wert_status`, `methode`, `faktor`, `speicher_regel`, `mastr_name` (Name im MaStR), `flex_regel`, `fundort` (Menüpfad), `suchhinweis_folgejahr` (Dateinamensmuster), `anmerkung`, `abrufdatum` (Stichtag), `veroeffentlichung` (4.3), `suche_2_beleg` (Ergebnis des zweiten Durchgangs), `gilt_2026`, `gilt_stichtag`, `methode_kat`, `methode_beleg`, `faktor_num`, `speicher_sonderregel`, `speicher_faktor`, `methode_notiz`. Bedeutung wie 4.1.
 
 ### 4.3 Kategorie `veroeffentlichung` (254 Dokumente)
 
@@ -164,7 +164,7 @@ Je Dokument: `id`, `netzbetreiber`, `jahr`, `typ`, `region`, `bundesland`, `doku
 
 ## 6 Aktualisierung (jährlich)
 1. `bkz_quellen.csv`: `fundort` und `suchhinweis_folgejahr` (Dateinamensmuster mit `<Jahr>`) nutzen; bei CDN-Links mit Hash über den Fundort gehen.
-2. Neue Zeilen mit neuem `jahr` anhängen; alte bleiben als Historie (Regel „durch neueres Blatt ersetzt“).
+2. Neue Zeilen mit neuem `bezugsjahr` anhängen; alte bleiben als Historie (Regel „durch neueres Blatt ersetzt“).
 3. ÜNB: vorläufiges Preisblatt Anfang Oktober, endgültiges Anfang Dezember auf netztransparenz.de; Regionalfaktoren mindestens alle zwei Jahre neu.
 
 ## 7 KI-Einsatz

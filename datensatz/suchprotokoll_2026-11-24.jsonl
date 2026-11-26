@@ -1,0 +1,124 @@
+{"_info":"Zweiter Suchdurchgang 24.11.2026 (Claude): je VNB ohne Wert eine Websuche \"Baukostenzuschuss Mittelspannung 2026\" mit Domainfilter auf die Website des Netzbetreibers; Treffer am Original geprüft (PDF oder Webseite im Browser). Spätere Zeilen derselben id ersetzen frühere (PRUEFEN -> Ergebnis)."}
+{"id":"BKZ021","kat":"Dublette","beleg":"MITNETZ mit Werten unter BKZ152; Websuche zeigt MS-Seite https://www.mitnetz-strom.de/energie-beziehen/gewerbe-und-industrie/netzanschluss/ihr-stromanschluss-in-der-mittelspannung"}
+{"id":"BKZ050","kat":"nur Rechenregel","beleg":"TAB MS: BKZ = geltender veröffentlichter LP (>2500 h) × Leistung; Preisblatt Netzanschlüsse 01/2026: oberhalb NS gesonderte Preise, kein Wert https://www.mvv-netze.de/fileadmin/user_upload_mvv-netze/Dokumente/bauen/preise/MVV_Netze_FORM_02_Preisblatt.pdf"}
+{"id":"BKZ059","kat":"nur Vorjahr veröffentlicht","beleg":"Kalkulationsvorlage BKZ 2025 (5-J-Mittel × 0,7, MS 109,37 €/kW) https://www.avacon-netz.de/content/dam/revu-global/avacon-netz/documents/Energie_anschliessen/Stromnetz/bkz/Kalkulationsvorlage%20f%C3%BCr%20Baukostenzusch%C3%BCsse%20%202025.pdf; 2026 nicht gefunden"}
+{"id":"BKZ060","kat":"keine Angabe gefunden","beleg":"swm-infrastruktur.de: Preisblatt Netzanschlüsse, NNE 2026 – kein Strom-BKZ oberhalb NS"}
+{"id":"BKZ064","kat":"nur Vorjahr veröffentlicht","beleg":"Pauschalpreisverzeichnis ab 01.01.2023: MS 80,26 €/kW; 2026 nicht gefunden"}
+{"id":"BKZ075","kat":"älteres Preisblatt","beleg":"Preisblatt für Baukostenzuschüsse ab 1. Januar 2020 verlinkt auf https://www.energienetz-mitte.de/kunden/hausanschluss/strom-anschluss/ – prüfen, ob noch gültig"}
+{"id":"BKZ086","kat":"nur Verweis Positionspapier","beleg":"Ergänzende Bedingungen NAV: oberhalb NS nach Positionspapier, kein Wert https://www.e-netz-suedhessen.de/fileadmin/download/nav_ergaenzende_bedingung.pdf"}
+{"id":"BKZ088","kat":"keine Angabe gefunden","beleg":"netz-duesseldorf.de/netzanschluss/neuanschluss-und-aenderung/preise: BKZ leistungsabhängig, kein Wert"}
+{"id":"BKZ097","kat":"keine Angabe gefunden","beleg":"ulm-netze.de: kein Strom-BKZ oberhalb NS"}
+{"id":"BKZ098","kat":"auf Anfrage","beleg":"Preisübersicht BKZ 01.01.2024: MS 20 kV 'auf Anfrage' https://www.energienetze-offenbach.de/fileadmin/user_upload_eno/Dokumente/Service/Netzanschluss/Preisblatt_Strom_und_Gas_01-01-2024.pdf"}
+{"id":"BKZ099","kat":"keine Angabe gefunden","beleg":"travenetz.de: BKZ als Kostenbestandteil genannt, kein MS-Wert"}
+{"id":"BKZ100","kat":"PRUEFEN Treffer","beleg":"Websuche: Preisblatt mit 5-J-Mittel, MS 107,93 € netto (Dokument ca. 15 Monate alt) – Quelle im Download-Bereich bonn-netz.de suchen"}
+{"id":"BKZ101","kat":"nur Rechenregel","beleg":"lsw-netz.de/bauen-wohnen/netzanschluss/netzanschluss-strom/: NE 3–5 BKZ = Leistung × 5-J-Mittel LP; Werte nicht beziffert (frühere Anm.: Regel 2009, BKZ = LP)"}
+{"id":"BKZ103","kat":"keine Angabe gefunden","beleg":"Websuche celle-uelzen-netz.de ohne Treffer"}
+{"id":"BKZ106","kat":"älteres Preisblatt","beleg":"Preisblatt Strom 02/2024: MS 66,60 €/kW netto https://www.saarbruecker-stadtwerke.de/media/download-5732d0e4dfbac – prüfen, ob 2026 gültig"}
+{"id":"BKZ107","kat":"keine Angabe gefunden","beleg":"swo-netz.de: kein MS-Wert"}
+{"id":"BKZ109","kat":"keine Angabe gefunden","beleg":"zeag-energie.de / nhf-netz.de: kein Treffer"}
+{"id":"BKZ110","kat":"keine Angabe gefunden","beleg":"Websuche cpm-netz.de ohne Treffer"}
+{"id":"BKZ112","kat":"nur Rechenregel","beleg":"ob-netz.de Netzanschluss und Anträge: BKZ = Leistung × 5-J-Mittel LP >2500 h; Werte nicht beziffert"}
+{"id":"BKZ114","kat":"keine Angabe gefunden","beleg":"netze-solingen.de: nur NNE 2026"}
+{"id":"BKZ113","kat":"keine Angabe gefunden","beleg":"gelsenwasser.de: nur Wasser-BKZ"}
+{"id":"BKZ115","kat":"keine Angabe gefunden","beleg":"stadtwerke-hamm.de: kein Strom-BKZ"}
+{"id":"BKZ117","kat":"älteres Preisblatt","beleg":"Albwerk Dokument 01/2020: NE5 MS 66 €/kW, NE6 71 €/kW – prüfen"}
+{"id":"BKZ119","kat":"PRUEFEN Treffer","beleg":"Download-Bereich https://www.stadtwerke-jena-netze.de/service/download.html: 'Preisblatt für Mittelspannungsanschlüsse'"}
+{"id":"BKZ120","kat":"auf Anfrage","beleg":"Ergänzende Bestimmungen TAR MS: MS-Anschluss individuell kalkuliert, Angebot https://www.stadtwerke-pforzheim.de/fileadmin/user_upload/Downloads/Netze/TAR/Ergaenzende_Bestimmungen_TAR_Mittelspannung.pdf"}
+{"id":"BKZ121","kat":"keine Angabe gefunden","beleg":"swte-netz.de: kein Strom-BKZ"}
+{"id":"BKZ125","kat":"PRUEFEN Treffer","beleg":"https://www.stadtwerke-herne.de/netze/energie-verbrauchen/netzanschluss: MS 2026 134,84 €/kW (Positionspapier, LP-Modell)"}
+{"id":"BKZ127","kat":"keine Angabe gefunden","beleg":"ewr-remscheid.de: Ergänzende Bedingungen ohne MS-Wert"}
+{"id":"BKZ129","kat":"keine Angabe gefunden","beleg":"Websuche rostock-netz.de ohne Treffer"}
+{"id":"BKZ130","kat":"keine Angabe gefunden","beleg":"ggew.de: nur NS 97,50 €/kW"}
+{"id":"BKZ132","kat":"keine Angabe gefunden","beleg":"suec.de: nur Wasser-BKZ"}
+{"id":"BKZ134","kat":"keine Angabe gefunden","beleg":"swt.de: kein Strom-BKZ"}
+{"id":"BKZ135","kat":"älteres Preisblatt","beleg":"infra fürth Anlage 1 NAV: BKZ = 0,7 × K × Leistung (Sonderformel, Kosten der örtlichen Verteilanlagen inkl. MS-Leitungen bis 30 kV), kein €/kW-Wert"}
+{"id":"BKZ136","kat":"PRUEFEN Treffer","beleg":"https://www.stadtwerke-sw.de/netze/stromnetz: 2026 MS 135,79 / HS-MS 144,63 / MS-NS 79,83 €/kW (Positionspapier 11/2024, 5-J-Mittel)"}
+{"id":"BKZ137","kat":"keine Angabe gefunden","beleg":"Websuche ssmw.de ohne Treffer"}
+{"id":"BKZ138","kat":"keine Angabe gefunden","beleg":"stadtwerke-velbert.de: nur NS (50 % der Kosten)"}
+{"id":"BKZ139","kat":"keine Angabe gefunden","beleg":"bigge-energie.de: nur Wasser"}
+{"id":"BKZ140","kat":"keine Angabe gefunden","beleg":"tws-netz.de: BKZ für Graustromspeicher erwähnt (100 % bei Auftrag), kein Wert"}
+{"id":"BKZ141","kat":"keine Angabe gefunden","beleg":"Websuche netzgesellschaft-guetersloh.de ohne Treffer"}
+{"id":"BKZ142","kat":"keine Angabe gefunden","beleg":"thuega-energienetze.de: kein Treffer"}
+{"id":"BKZ119","kat":"Wert (älteres Preisblatt, weiter gültig)","beleg":"Preisblatt Mittelspannung gültig ab 01.01.2024 (kein Ablaufdatum, im Download-Bereich verlinkt): BKZ MS 107,99 €/kW, eingefroren auf LP 2023, Verfahren 2009 (BK6p-06-003) https://www.stadtwerke-jena-netze.de/dam/jcr:c1dbe03a-31ba-4874-a751-ce587b83ddbc/Preisblatt_Mittelspannung_2024.pdf","werte":{"MS":107.99},"methode_kat":"Einzeljahr-LP (eingefroren 2023), Verfahren 2009"}
+{"id":"BKZ125","kat":"Wert","beleg":"Webseite geprüft 24.11.2026, Textauszug BKZ125_Stadtwerke_Herne_2026_BKZ.txt","werte":{"MS":134.84},"methode_kat":"Verweis Positionspapier 2024 (LP-Modell)"}
+{"id":"BKZ136","kat":"Wert","beleg":"Webseite geprüft 24.11.2026, Textauszug BKZ136_Stadtwerke_Schweinfurt_2026_BKZ.txt","werte":{"HS/MS":144.63,"MS":135.79,"MS/NS":79.83},"methode_kat":"5J-Mittel (ausdrücklich, PP 11/2024)"}
+{"id":"BKZ144","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-om.de ohne Treffer"}
+{"id":"BKZ145","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-hameln.de ohne Treffer"}
+{"id":"BKZ147","kat":"keine Angabe gefunden","beleg":"stadtwerke-bamberg.de: NNE 2026, AGB höhere Spannungsebenen 2021 ohne Wert"}
+{"id":"BKZ148","kat":"keine Angabe gefunden","beleg":"kreiswerke-main-kinzig.de: nur Wasser"}
+{"id":"BKZ149","kat":"PRUEFEN Treffer","beleg":"stadtwerke-troisdorf.de Download-Center: Preisblatt mit MSP/NSP 148,80 €/kW netto – Jahr prüfen"}
+{"id":"BKZ153","kat":"keine Angabe gefunden","beleg":"nvb.de: kein Strom-BKZ"}
+{"id":"BKZ155","kat":"auf Anfrage","beleg":"https://netze.stadtwerke-ratingen.de/stromnetz/netzanschluss/mittelspannung-anschluss: MS-Anschluss individuelles Angebot"}
+{"id":"BKZ156","kat":"PRUEFEN Treffer","beleg":"https://www.bew-bocholt.de/netze/stromnetz/netzzugang: MS 2026 Durchschnittspreis 183,93 €/kW (2022–2026), PP 20.11.2024"}
+{"id":"BKZ157","kat":"Verweis Vertrag","beleg":"Netzanschlussvertrag höhere Spannungsebenen: BKZ nach Ziff. 4 AGB, Höhe in Anlage 3 (nicht veröffentlicht) https://www.geranetz.de/fileadmin/user_upload/strom/veroeffentlichungen/Netzanschluss/Netzanschlussvertrag_fuer_hoehere_Spannungsebenen.pdf"}
+{"id":"BKZ159","kat":"keine Angabe gefunden","beleg":"Websuche vwew.de ohne Treffer"}
+{"id":"BKZ160","kat":"keine Angabe gefunden","beleg":"stwab.de: kein Strom-BKZ"}
+{"id":"BKZ162","kat":"auf Anfrage","beleg":"Preisblatt Netzanschluss Strom ab 01.03.2025: MS-Anschlüsse und Trafoanlagen gesondert kalkuliert https://gsw-kamen.de/files/220998-371-0-051c/Hausanschluss%20Pauschalpreise%20Strom%20ab%2001.03.pdf"}
+{"id":"BKZ163","kat":"keine Angabe gefunden","beleg":"kew.de: kein Strom-BKZ"}
+{"id":"BKZ166","kat":"keine Angabe gefunden","beleg":"stadtwerke-bayreuth.de: AGB MS Ziff. 8 BKZ ohne Wert"}
+{"id":"BKZ167","kat":"keine Angabe gefunden","beleg":"stadtwerke-hall.de: kein MS-Wert"}
+{"id":"BKZ168","kat":"keine Angabe gefunden","beleg":"stadtwerke-luenen.de: NNE 2026 verweist auf auf der Website publizierte Bedingungen; MS-Wert nicht gefunden"}
+{"id":"BKZ170","kat":"keine Angabe gefunden","beleg":"stadtwerke-ffb.de: nur NS"}
+{"id":"BKZ171","kat":"keine Angabe gefunden","beleg":"stadtwerke-konstanz.de: kein Treffer"}
+{"id":"BKZ173","kat":"keine Angabe gefunden","beleg":"evi-hildesheim.de: nur Ergänzende Bedingungen NAV 2012"}
+{"id":"BKZ174","kat":"PRUEFEN Treffer","beleg":"https://www.zev-energie.de/netzanschluss-strom.php: eigenes Preisblatt BKZ oberhalb NS verlinkt"}
+{"id":"BKZ176","kat":"PRUEFEN Treffer","beleg":"Preisblatt für Kostenpauschalen 06/25: BKZ NE5 113,25 €/kW (+ NE6, NE7) https://www.sw-aalen.de/uploads/attachment/download/347/Preisblatt_f%C3%BCr_Kostenpauschalen_06_25.pdf"}
+{"id":"BKZ177","kat":"keine Angabe gefunden","beleg":"stadtwerke-rheine.de: Ergänzende Bedingungen NAV (Pauschale, >50 kW), kein MS-Wert"}
+{"id":"BKZ178","kat":"keine Angabe gefunden","beleg":"stwgd.de: kein Treffer"}
+{"id":"BKZ179","kat":"keine Angabe gefunden","beleg":"stadtwerke-schwerte.de: nur NNE 2026"}
+{"id":"BKZ180","kat":"keine Angabe gefunden","beleg":"stadtwerke-menden.de: nur NNE und NS"}
+{"id":"BKZ181","kat":"keine Angabe gefunden","beleg":"stadtwerke-cottbus.de: Meldung Preiserhöhung BKZ (Stand 2016), kein MS-Wert"}
+{"id":"BKZ182","kat":"keine Angabe gefunden","beleg":"stadtwerke-norderstedt.de: Ergänzende Bedingungen NAV 01.01.2026 nur NS"}
+{"id":"BKZ183","kat":"keine Angabe gefunden","beleg":"stadtwerke-marburg.de: nur NNE 2026"}
+{"id":"BKZ185","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-frankenthal.de ohne Treffer"}
+{"id":"BKZ186","kat":"nur Rechenregel","beleg":"Preisblatt Strom Netzanschluss/Anschlussnutzung (2024): höhere Spannungsebenen BKZ = beantragte Leistung × LP >2500 h der Anschlussebene https://www.dvv-dessau.de/wp-content/uploads/2024/06/Preisblatt-Strom-Netzanschluss-Anschlussnutzung-1.pdf"}
+{"id":"BKZ190","kat":"keine Angabe gefunden","beleg":"Websuche netzplus.de ohne Treffer"}
+{"id":"BKZ191","kat":"Verweis andere Gesellschaft","beleg":"netze.stadtwerke-witten.de: MS seit 01.07.2022 durch Stadtwerke Witten Mittelspannungsnetz GmbH (BKZ214); NS nach § 11 NAV"}
+{"id":"BKZ192","kat":"keine Angabe gefunden","beleg":"gew-wilhelmshaven.de: nur NNE 2026 und NAV-Preisblatt"}
+{"id":"BKZ193","kat":"keine Angabe gefunden","beleg":"stadtwerke-schwerin.de: BKZ genannt, kein MS-Wert"}
+{"id":"BKZ195","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-kh.de ohne Treffer"}
+{"id":"BKZ197","kat":"keine Angabe gefunden","beleg":"stadtwerke-speyer.de: nur NS (Ergänzende Bedingungen 2021)"}
+{"id":"BKZ198","kat":"PRUEFEN Treffer","beleg":"https://www.swn-neuwied.de/swn/Netzbetrieb/Fuer-Netzkunden/Netzanschluesse-Strom-Gas-Wasser/: 'Preisblatt Baukostenzuschuss 2026 (ab 01.01.2026)'"}
+{"id":"BKZ199","kat":"keine Angabe gefunden","beleg":"stadtwerke-sindelfingen.de: nur NS 65 €/kW (2026); 2027-Blatt liegt als BKZ200 vor"}
+{"id":"BKZ202","kat":"keine Angabe gefunden","beleg":"Websuche swl-netz.de ohne Treffer"}
+{"id":"BKZ203","kat":"keine Angabe gefunden","beleg":"swro.de: nur Wasser/Fernwärme"}
+{"id":"BKZ204","kat":"auf Anfrage","beleg":"https://stadtwerke-hilden.de/netze/stromnetz/netzanschluss.html: MS-Anschluss individuelles Angebot"}
+{"id":"BKZ205","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-lippstadt.de ohne Treffer"}
+{"id":"BKZ207","kat":"keine Angabe gefunden","beleg":"Websuche evl-limburg.de ohne Treffer"}
+{"id":"BKZ209","kat":"PRUEFEN Treffer","beleg":"Allgemeine Preise und Bedingungen 2025: MS 65,00 €/kW netto https://www.albstadtwerke.de/fileadmin/media/_downloads/asw/service/installateure_bauherren/ASW_Netz_Allgem.Preise_u._Bed_2025.pdf"}
+{"id":"BKZ210","kat":"keine Angabe gefunden","beleg":"Websuche swsh.de ohne Treffer"}
+{"id":"BKZ211","kat":"keine Angabe gefunden","beleg":"stadtwerke-straubing.de: nur Wasser-BKZ sichtbar"}
+{"id":"BKZ212","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-bad-salzuflen.de ohne Treffer"}
+{"id":"BKZ213","kat":"keine Angabe gefunden","beleg":"stadtwerke-waiblingen.de: nur NS"}
+{"id":"BKZ214","kat":"keine Angabe gefunden","beleg":"Websuche 'Stadtwerke Witten Mittelspannungsnetz GmbH' ohne MS-Preisblatt"}
+{"id":"BKZ215","kat":"keine Angabe gefunden","beleg":"Websuche evlk.de ohne Treffer"}
+{"id":"BKZ216","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-tuttlingen.de ohne Treffer"}
+{"id":"BKZ217","kat":"keine Angabe gefunden","beleg":"Websuche 'Regionalwerk Bodensee Netze Baukostenzuschuss Mittelspannung' ohne Treffer"}
+{"id":"BKZ218","kat":"keine Angabe gefunden","beleg":"stadtwerke-gronau.de: kein BKZ"}
+{"id":"BKZ220","kat":"keine Angabe gefunden","beleg":"Websuche verteilnetz-plauen.de ohne Treffer"}
+{"id":"BKZ223","kat":"keine Angabe gefunden","beleg":"stadtwerke-rastatt.de: nur NNE 2026 und NS"}
+{"id":"BKZ226","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-weinheim.de ohne Treffer"}
+{"id":"BKZ227","kat":"auf Anfrage","beleg":"https://www.freisinger-stadtwerke.de/de/Netze/Stromnetz/Hausanschluss-Strom/Baukostenzuschuss.html: über 30 kW bzw. 3 WE individuell"}
+{"id":"BKZ228","kat":"keine Angabe gefunden","beleg":"Websuche mainnetz.de ohne Treffer"}
+{"id":"BKZ229","kat":"keine Angabe gefunden","beleg":"Websuche ewb-bruchsal.de ohne Treffer"}
+{"id":"BKZ230","kat":"keine Angabe gefunden","beleg":"Websuche stadtwerke-ansbach.de ohne Treffer"}
+{"id":"BKZ231","kat":"PRUEFEN Treffer","beleg":"https://www.stadtwerke-soest.de/die-stadtwerke/netze/strom/netzanschluss: 'Preisblatt Baukostenzuschuss für Nieder- und Mittelspannungskunden'"}
+{"id":"BKZ232","kat":"keine Angabe gefunden","beleg":"stadtwerke-langen.de: AGB Strom 2022 ohne MS-Wert"}
+{"id":"BKZ233","kat":"PRUEFEN Treffer","beleg":"https://www.stadtwerke-heidenheim.de/preise-stromanschlusskosten.html: 20-kV-Anschluss 169,55 €/kW (Preisliste ab 09/2025) – BKZ oder anderes?"}
+{"id":"BKZ235","kat":"keine Angabe gefunden","beleg":"Websuche e-werk-sachsenwald.de ohne Treffer"}
+{"id":"BKZ236","kat":"keine Angabe gefunden","beleg":"stadtwerke-amberg.de: nur NS"}
+{"id":"BKZ238","kat":"älteres Preisblatt","beleg":"Baukostenzuschüsse 01/2022 (Druckstand 008p_0719_1221): MS-Netz 29,00 €/kW https://www.nordnetz.com/content/dam/revu-global/nordnetz/Dokumente/energie_anschliessen/bedingungen-und-preise/nordnetz_anschlie%C3%9Fen_stromnetz_baukostenzuschuss_008p_0719_1221_web.pdf – prüfen"}
+{"id":"BKZ239","kat":"PRUEFEN Treffer","beleg":"https://www.stadtwerke-boeblingen.de/netze/stromnetz: 'Preisübersicht Baukostenzuschüsse Strom' (PDF 534 KB); Netzübernahme von Netze BW zum 01.01.2026"}
+{"id":"BKZ240","kat":"keine Angabe gefunden","beleg":"energie-suedwest.de: kein Treffer"}
+{"id":"BKZ241","kat":"keine Angabe gefunden","beleg":"stadtwerke-hof.de: kein MS-BKZ"}
+{"id":"BKZ242","kat":"keine Angabe gefunden","beleg":"leinenetz.de: nur NS (35 €/kW über 60 kW)"}
+{"id":"BKZ222","kat":"Industrienetz","beleg":"Websuche 'Baukostenzuschuss Strom Alzchem Netz GmbH' ohne Treffer"}
+{"id":"BKZ224","kat":"Industrienetz","beleg":"Websuche 'Baukostenzuschuss VW Kraftwerk GmbH' ohne Treffer"}
+{"id":"BKZ243","kat":"PRUEFEN Treffer","beleg":"stw-crailsheim.de: BKZ MS 01.01.–31.12.2026 134,63 €/kW netto (PP BK8)"}
+{"id":"BKZ244","kat":"keine Angabe gefunden","beleg":"stadtwerke-ruesselsheim.de: Bauherrenmappe ohne MS-Wert"}
+{"id":"BKZ245","kat":"keine Angabe gefunden","beleg":"stadtwerke-neuburg.de: Servicepreise 2026 ohne BKZ-MS sichtbar"}
+{"id":"BKZ246","kat":"keine Angabe gefunden","beleg":"stadtwerke-nettetal.de: nur NDAV"}
+{"id":"BKZ247","kat":"keine Angabe gefunden","beleg":"stadtwerke-emden.de: kein Strom-BKZ"}
+{"id":"BKZ249","kat":"keine Angabe gefunden","beleg":"Websuche ueberlandwerk-erding.de ohne Treffer"}
+{"id":"BKZ250","kat":"keine Angabe gefunden","beleg":"stadtwerke-peine.de: TAB MS 2026, NAV-Preisblatt 2024; kein MS-BKZ"}
+{"id":"BKZ252","kat":"nur Rechenregel","beleg":"https://sfw-ruhr.de/netze/netzanschluss/hausanschluss/: Batteriespeicher in MS – BKZ nach Leistungspreismodell, kein Wert"}
