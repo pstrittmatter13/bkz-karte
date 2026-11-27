@@ -182,9 +182,11 @@
       const d = K.docs[id];
       for (const x of d.werte) {
         if (!ebenen.includes(x.ebene)) continue;
-        const blatt = x.einheit !== "€/kW" ? `<br><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span>` : "";
-        if (x.aus) zaehlt.push(`<tr><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b>${blatt}</td></tr>`);
-        else nicht.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}${blatt}</td><td>${x.grund === "erst nach dem Stichtag gültig" && d.gueltig_ab ? `gilt erst ab ${datum(d.gueltig_ab)} (Stichtag der Karte: ${datum(K.datensatz.stichtag)})` : esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
+        // Hinweis zur Umrechnung als eigene Zeile über die ganze Breite, damit die Tabelle nicht breiter als das Panel wird
+        const blatt = n => x.einheit !== "€/kW" ? `<tr class="unter"><td colspan="${n}"><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span></td></tr>` : "";
+        const mitUnter = x.einheit !== "€/kW" ? ' class="hat-unter"' : "";
+        if (x.aus) zaehlt.push(`<tr${mitUnter}><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b></td></tr>${blatt(2)}`);
+        else nicht.push(`<tr${mitUnter}><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}</td><td>${x.grund === "erst nach dem Stichtag gültig" && d.gueltig_ab ? `gilt erst ab ${datum(d.gueltig_ab)} (Stichtag der Karte: ${datum(K.datensatz.stichtag)})` : esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>${blatt(3)}`);
       }
     }
     h += zaehlt.length ? `<table><tr><th>Ebene</th><th class="z">BKZ in €/kW netto</th></tr>${zaehlt.join("")}</table>`
