@@ -112,9 +112,6 @@ input[type=search]::placeholder, .suche input::placeholder { color: var(--ink3);
 .panel th { font-size: .74rem; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: .03em; }
 .panel td, .panel th { padding: 5px 8px 5px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--linie); }
 .panel td.z, #tabelle td.z, #tabelle th.z, .panel th.z { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.panel tr.hat-unter td { border-bottom: 0; padding-bottom: 0; }
-.panel tr.unter td { padding-top: 0; }
-.panel tr.unter .hinweis { display: block; margin: 2px 0 0; }
 .panel details.technik, .panel .belege { overflow-wrap: anywhere; }   /* lange Dateinamen ohne Leerzeichen */
 .chip { display: inline-block; font-size: .74rem; padding: 1px 8px; border-radius: 999px; background: var(--fl2); color: var(--ink2); }
 .belege { font-size: .82rem; color: var(--ink2); padding: 6px 0 4px; line-height: 1.5; }

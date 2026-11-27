@@ -182,11 +182,9 @@
       const d = K.docs[id];
       for (const x of d.werte) {
         if (!ebenen.includes(x.ebene)) continue;
-        // Hinweis zur Umrechnung als eigene Zeile über die ganze Breite, damit die Tabelle nicht breiter als das Panel wird
-        const blatt = n => x.einheit !== "€/kW" ? `<tr class="unter"><td colspan="${n}"><span class="hinweis">im Blatt ${fmt(x.netto)} ${esc(x.einheit)}${x.umrechnung ? ", umgerechnet: " + esc(x.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}</span></td></tr>` : "";
-        const mitUnter = x.einheit !== "€/kW" ? ' class="hat-unter"' : "";
-        if (x.aus) zaehlt.push(`<tr${mitUnter}><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b></td></tr>${blatt(2)}`);
-        else nicht.push(`<tr${mitUnter}><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}</td><td>${x.grund === "erst nach dem Stichtag gültig" && d.gueltig_ab ? `gilt erst ab ${datum(d.gueltig_ab)} (Stichtag der Karte: ${datum(K.datensatz.stichtag)})` : esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>${blatt(3)}`);
+        // Umrechnung (z. B. €/kVA → €/kW) steht im Beleg, nicht in der Tabelle
+        if (x.aus) zaehlt.push(`<tr><td>${esc(x.ebene)}</td><td class="z"><b>${fmt(x.eur_kw)}</b></td></tr>`);
+        else nicht.push(`<tr><td>${esc(x.ebene)}</td><td class="z">${fmt(x.eur_kw)}</td><td>${x.grund === "erst nach dem Stichtag gültig" && d.gueltig_ab ? `gilt erst ab ${datum(d.gueltig_ab)} (Stichtag der Karte: ${datum(K.datensatz.stichtag)})` : esc(GRUND[x.grund] || x.grund || "nicht nach den Regeln")}</td></tr>`);
       }
     }
     h += zaehlt.length ? `<table><tr><th>Ebene</th><th class="z">BKZ in €/kW netto</th></tr>${zaehlt.join("")}</table>`
@@ -199,8 +197,10 @@
       if (!d.url && !d.werte.length) continue;
       const rechenweg = d.methode && d.methode !== "nicht angegeben" ? `Rechenweg: ${esc(METHODE[d.methode] || d.methode)}${d.faktor != null && d.faktor !== 1 ? ", Faktor " + fmt(d.faktor, 2) : ""}<br>` : "";
       const speicher = d.speicher && d.speicher !== "keine Angabe" ? `Für Speicher: ${esc(d.speicher)}${d.speicher_faktor != null ? " × " + fmt(d.speicher_faktor, 2) : ""}<br>` : "";
+      const u = d.werte.find(x => x.einheit !== "€/kW");
+      const umrechnung = u ? `Im Blatt in ${esc(u.einheit)}, auf €/kW umgerechnet${u.umrechnung ? ": " + esc(u.umrechnung.replace(/^[\d.,]+\s*\((.*)\)$/, "$1")) : ""}<br>` : "";
       h += `<details><summary>Beleg: ${esc(d.titel || d.kategorie)}</summary><div class="belege">
-        Gültig ab ${datum(d.gueltig_ab) || "–"}${d.gueltig_bis ? " bis " + datum(d.gueltig_bis) : ""}<br>${rechenweg}${speicher}
+        Gültig ab ${datum(d.gueltig_ab) || "–"}${d.gueltig_bis ? " bis " + datum(d.gueltig_bis) : ""}<br>${rechenweg}${umrechnung}${speicher}
         ${belegLinks(d)}
         <details class="technik"><summary>Angaben zur Prüfung</summary>
           ${d.fundort ? "Fundort: " + esc(d.fundort) + "<br>" : ""}${d.methode_beleg && d.methode_beleg !== "keine Angabe" ? "Rechenweg: " + esc(d.methode_beleg) + "<br>" : ""}${d.stand ? "Stand des Blatts: " + esc(d.stand) + "<br>" : ""}
